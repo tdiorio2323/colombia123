@@ -1,0 +1,8 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "includeWarnings": true,
+    "timeout": 120000
+  },
+  "urls": ["$BASE_URL"]
+}

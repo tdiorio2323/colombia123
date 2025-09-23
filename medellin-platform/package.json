@@ -1,0 +1,13 @@
+{
+  "name": "medellin-platform",
+  "private": true,
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w apps/api & npm run dev -w apps/web",
+    "build": "npm -w apps/api run build && npm -w apps/web run build",
+    "start": "npm -w apps/api start && npm -w apps/web start"
+  }
+}

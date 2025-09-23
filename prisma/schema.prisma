@@ -1,0 +1,203 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Core user model - compatible with existing auth systems
+model User {
+  id                String   @id @default(cuid())
+  email             String   @unique
+  name              String?
+  passwordHash      String?
+  stripeCustomerId  String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Profile relationship (one-to-one)
+  profile Profile?
+
+  // Relationships as subscriber/buyer
+  subscriptions    Subscription[] @relation("Subscriber")
+  sentMessages     Message[]      @relation("MessageSender")
+  receivedMessages Message[]      @relation("MessageReceiver")
+  transactions     Transaction[]  @relation("TransactionBuyer")
+
+  @@map("users")
+}
+
+// User profile - supports creator and fan roles
+model Profile {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  username      String   @unique
+  displayName   String?
+  bio           String?
+  avatarUrl     String?
+  role          UserRole @default(FAN)
+  isVerified    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Role-specific fields (nullable for flexibility)
+  // Creator fields
+  subscriptionPrice  Int?     // Price in cents
+  tipEnabled         Boolean  @default(false)
+  stripeAccountId    String?  // Stripe Connect account
+  mediaCount         Int      @default(0)
+  subscriberCount    Int      @default(0)
+  totalEarnings      Int      @default(0) // In cents
+
+  // Fan fields
+  subscriptionCount Int @default(0)
+  totalSpent        Int @default(0) // In cents
+
+  // Relationships
+  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  media               Media[]         @relation("MediaCreator")
+  createdSubscriptions Subscription[] @relation("SubscriptionCreator")
+  transactions        Transaction[]   @relation("TransactionCreator")
+
+  @@map("profiles")
+}
+
+// Media content model
+model Media {
+  id           String    @id @default(cuid())
+  creatorId    String
+  title        String
+  description  String?
+  mediaUrl     String
+  thumbnailUrl String?
+  mediaType    MediaType
+  isPremium    Boolean   @default(false)
+  price        Int?      // Price in cents for premium content
+  viewCount    Int       @default(0)
+  likeCount    Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relationships
+  creator      Profile       @relation("MediaCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  transactions Transaction[] @relation("MediaPurchase")
+
+  @@map("media")
+}
+
+// Subscription model
+model Subscription {
+  id                  String            @id @default(cuid())
+  creatorId           String
+  subscriberId        String
+  isActive            Boolean           @default(true)
+  startedAt           DateTime          @default(now())
+  expiresAt           DateTime?
+  canceledAt          DateTime?
+  amount              Int               // Amount in cents
+  stripeSubscriptionId String? @unique
+  status              SubscriptionStatus @default(ACTIVE)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  // Relationships
+  creator    Profile @relation("SubscriptionCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  subscriber User    @relation("Subscriber", fields: [subscriberId], references: [id], onDelete: Cascade)
+
+  @@unique([creatorId, subscriberId])
+  @@map("subscriptions")
+}
+
+// Transaction model for all payments
+model Transaction {
+  id            String          @id @default(cuid())
+  buyerId       String
+  creatorId     String
+  mediaId       String?
+  type          TransactionType
+  amount        Int             // Amount in cents
+  currency      String          @default("usd")
+  status        TransactionStatus @default(PENDING)
+  stripePiId    String? @unique // Stripe Payment Intent ID
+  description   String?         // For tips with messages
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Relationships
+  buyer   User     @relation("TransactionBuyer", fields: [buyerId], references: [id])
+  creator Profile  @relation("TransactionCreator", fields: [creatorId], references: [id])
+  media   Media?   @relation("MediaPurchase", fields: [mediaId], references: [id])
+
+  @@map("transactions")
+}
+
+// Message model for creator-fan communication
+model Message {
+  id          String   @id @default(cuid())
+  senderId    String
+  receiverId  String
+  content     String
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  sender   User @relation("MessageSender", fields: [senderId], references: [id])
+  receiver User @relation("MessageReceiver", fields: [receiverId], references: [id])
+
+  @@map("messages")
+}
+
+// Creator earnings tracking for analytics
+model CreatorEarning {
+  id          String   @id @default(cuid())
+  creatorId   String
+  date        DateTime @db.Date
+  subscriptions Int    @default(0) // Earnings from subscriptions in cents
+  tips        Int      @default(0) // Earnings from tips in cents
+  mediaSales  Int      @default(0) // Earnings from media sales in cents
+  totalGross  Int      @default(0) // Total before platform fee in cents
+  platformFee Int      @default(0) // Platform fee (20%) in cents
+  stripeFee   Int      @default(0) // Stripe processing fee in cents
+  totalNet    Int      @default(0) // Net earnings in cents
+  createdAt   DateTime @default(now())
+
+  @@unique([creatorId, date])
+  @@map("creator_earnings")
+}
+
+// Enums
+enum UserRole {
+  CREATOR
+  FAN
+  ADMIN
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  INCOMPLETE
+}
+
+enum TransactionType {
+  SUBSCRIPTION
+  TIP
+  MEDIA_PURCHASE
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
