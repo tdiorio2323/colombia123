@@ -96,6 +96,7 @@ Version: ``
     ├── RUNBOOK.md
     ├── scripts
     │   ├── project_overview.sh
+    │   ├── readme_overview.sh
     │   └── routes_report.sh
     ├── SECURITY.md
     ├── server
@@ -123,7 +124,7 @@ Version: ``
     ├── zap-baseline.sh
     └── zap-baseline.test.sh
     
-    35 directories, 82 files
+    35 directories, 83 files
 
 ### Key Directories
 - `client/`: React SPA (pages, components, global styles).
@@ -141,6 +142,7 @@ Version: ``
 -  test
 -  format.fix
 -  typecheck
+-  docs:refresh
 
 ## Dependencies
 - deps: dotenv, express, zod
