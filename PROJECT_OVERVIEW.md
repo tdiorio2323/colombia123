@@ -92,9 +92,11 @@ Version: ``
     │   └── robots.txt
     ├── README.md
     ├── request.json
+    ├── ROUTES.md
     ├── RUNBOOK.md
     ├── scripts
-    │   └── project_overview.sh
+    │   ├── project_overview.sh
+    │   └── routes_report.sh
     ├── SECURITY.md
     ├── server
     │   ├── index.ts
@@ -121,7 +123,7 @@ Version: ``
     ├── zap-baseline.sh
     └── zap-baseline.test.sh
     
-    35 directories, 80 files
+    35 directories, 82 files
 
 ### Key Directories
 - `client/`: React SPA (pages, components, global styles).
