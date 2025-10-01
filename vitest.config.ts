@@ -1,20 +1,21 @@
-import { defineConfig } from 'vitest/config';
-import path from 'path';
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
     environment: 'jsdom',
-    setupFiles: './vitest.setup.ts',
-    pool: 'vmThreads',
-    poolOptions: {
-      threads: { minThreads: 1, maxThreads: 1 },
-    },
+    setupFiles: ['vitest.setup.ts'],
+    css: true,
+    globals: true,
+    poolOptions: { threads: { minThreads: 1, maxThreads: 1 } },
+    server: { deps: { inline: ['@testing-library/jest-dom', '@stripe/react-stripe-js'] } }, // replaces deprecated deps.inline
   },
-  plugins: [], // avoid loading Vite dev plugins during tests
+  plugins: [], // keep dev plugins out
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './client'),
-      '@shared': path.resolve(__dirname, './shared'),
+      '@': '/client',
+      '@client': '/client',
+      '@server': '/server',
+      '@shared': '/shared',
     },
   },
-});
+})

@@ -24,11 +24,14 @@
     "noImplicitAny": false,
     "noFallthroughCasesInSwitch": false,
     "strictNullChecks": false,
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
 
     /* Path mapping */
     "baseUrl": ".",
     "paths": {
       "@/*": ["./client/*"],
+      "@client/*": ["./client/*"],
+      "@server/*": ["./server/*"],
       "@shared/*": ["./shared/*"]
     }
   },
@@ -37,7 +40,8 @@
     "server/**/*",
     "shared/**/*",
     "vite.config.ts",
-    "vite.config.server.ts"
+    "vite.config.server.ts",
+    "vitest.setup.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }
