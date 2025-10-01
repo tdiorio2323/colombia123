@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Play, Mail, Clock, Star } from 'lucide-react';
+import { Heart, Video, Mail, Clock, Star, Camera, MessageCircle } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { Link } from 'react-router-dom';
 
@@ -9,41 +9,41 @@ export default function Services() {
   const services = [
     {
       id: 1,
-      name: 'Personal Meet & Greet',
+      name: 'Personal Video Call',
       price: '$199',
       duration: '30 minutes',
-      description: 'One-on-one personal time with Eimy. Take photos, get autographs, and share your story.',
-      features: ['Personal conversation', 'Photo opportunities', 'Signed merchandise', 'Exclusive gift'],
-      icon: Heart,
+      description: 'One-on-one private video session. Intimate conversation, personal attention, and unforgettable moments.',
+      features: ['Private video chat', 'Personal conversation', 'Screen recording', 'Follow-up message'],
+      icon: Video,
       popular: true,
     },
     {
       id: 2,
-      name: 'Virtual Concert Access',
+      name: 'Exclusive Content Access',
       price: '$49',
-      duration: '2 hours',
-      description: 'Exclusive access to private virtual concerts and live performances.',
-      features: ['HD streaming', 'Interactive chat', 'Song requests', 'Recording access'],
-      icon: Play,
+      duration: 'Monthly',
+      description: 'Premium subscription with exclusive photos, videos, and behind-the-scenes content.',
+      features: ['Daily exclusive content', 'Direct messaging', 'Custom requests', 'Priority access'],
+      icon: Camera,
       popular: false,
     },
     {
       id: 3,
-      name: 'Private Message',
+      name: 'Private Message Package',
       price: '$29',
       duration: '24h response',
       description: 'Send a personal message and receive a personalized video response.',
-      features: ['Video response', 'Personal message', 'Fast delivery', 'Shareable content'],
+      features: ['Video response', 'Personal message', 'Fast delivery', 'Private & confidential'],
       icon: Mail,
       popular: false,
     },
     {
       id: 4,
-      name: 'Custom Song Request',
+      name: 'Custom Content Request',
       price: '$399',
-      duration: '2-3 weeks',
-      description: 'Commission a personalized song or cover just for you.',
-      features: ['Original composition', 'Professional recording', 'Exclusive rights', 'Behind-the-scenes'],
+      duration: '2-3 days',
+      description: 'Commission personalized exclusive content created just for you.',
+      features: ['Custom photoshoot', 'Professional quality', 'Exclusive rights', 'Personal dedication'],
       icon: Star,
       popular: false,
     },
@@ -59,13 +59,13 @@ export default function Services() {
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-cream via-background to-gold/10">
         <div className="container mx-auto px-4 text-center">
-          <Badge className="bg-gold/20 text-gold border-gold/30 mb-4">Exclusive Services</Badge>
+          <Badge className="bg-gold/20 text-gold border-gold/30 mb-4">Exclusive Experiences</Badge>
           <h1 className="text-5xl lg:text-6xl font-display font-bold mb-6">
-            Get Closer to <span className="text-gradient">Your Dreams</span>
+            Get Closer to <span className="text-gradient">Your Desires</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-            Experience personalized interactions and exclusive content designed to bring you closer 
-            to the music and moments that matter most.
+            Experience personalized interactions and exclusive content designed to bring you closer
+            to the intimate moments that matter most.
           </p>
         </div>
       </section>
@@ -140,35 +140,35 @@ export default function Services() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Full Name</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       className="w-full px-4 py-2 border border-input rounded-md focus:ring-2 focus:ring-gold focus:border-transparent"
                       placeholder="Your name"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Email</label>
-                    <input 
-                      type="email" 
+                    <input
+                      type="email"
                       className="w-full px-4 py-2 border border-input rounded-md focus:ring-2 focus:ring-gold focus:border-transparent"
                       placeholder="your@email.com"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Service Type</label>
+                  <label className="block text-sm font-medium mb-2">Experience Type</label>
                   <select className="w-full px-4 py-2 border border-input rounded-md focus:ring-2 focus:ring-gold focus:border-transparent">
-                    <option>Select a service...</option>
-                    <option>Personal Meet & Greet</option>
-                    <option>Virtual Concert</option>
-                    <option>Private Message</option>
-                    <option>Custom Song Request</option>
+                    <option>Select an experience...</option>
+                    <option>Personal Video Call</option>
+                    <option>Exclusive Content Access</option>
+                    <option>Private Message Package</option>
+                    <option>Custom Content Request</option>
                     <option>Other (describe below)</option>
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Special Requests</label>
-                  <textarea 
+                  <textarea
                     rows={4}
                     className="w-full px-4 py-2 border border-input rounded-md focus:ring-2 focus:ring-gold focus:border-transparent"
                     placeholder="Tell me about your dream experience..."
@@ -195,19 +195,19 @@ export default function Services() {
             {[
               {
                 q: "How far in advance should I book?",
-                a: "For the best availability, we recommend booking at least 2-3 weeks in advance. Custom services may require additional time."
+                a: "For the best availability, we recommend booking at least 2-3 days in advance. Custom content requests may require additional time."
               },
               {
                 q: "Can I reschedule my booking?",
-                a: "Yes! You can reschedule up to 48 hours before your scheduled time. Custom work may have different policies."
+                a: "Yes! You can reschedule up to 24 hours before your scheduled time. Custom requests may have different policies."
               },
               {
                 q: "What if I need to cancel?",
-                a: "Cancellations made 7+ days in advance receive a full refund. Cancellations within 7 days receive a 50% refund."
+                a: "Cancellations made 48+ hours in advance receive a full refund. Cancellations within 48 hours receive a 50% refund."
               },
               {
-                q: "Are the virtual concerts live?",
-                a: "Yes! All virtual concerts are performed live with real-time interaction. Recordings are also provided."
+                q: "Is my information kept private?",
+                a: "Absolutely! All sessions and content are completely private and confidential. We take your privacy seriously."
               }
             ].map((item, index) => (
               <Card key={index} className="p-6">

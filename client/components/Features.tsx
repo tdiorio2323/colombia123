@@ -37,7 +37,7 @@ export default function Features() {
         <div className="text-center mb-16">
           <h2 className="text-5xl lg:text-6xl font-display font-bold mb-6">
             <span className="text-white">Why Choose</span>{" "}
-            <span className="text-accent">Colombia123</span>
+            <span className="text-accent">Havana</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             The tools and platform you need to build a thriving creator business
