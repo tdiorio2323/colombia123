@@ -18,7 +18,7 @@ export default function Hero() {
           <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-6 py-2">
             <Sparkles className="w-4 h-4 text-accent" />
             <span className="text-accent text-sm font-semibold tracking-wide">
-              Colombia's Premier Creator Platform
+              Havana · Premier Creator Platform
             </span>
           </div>
 
@@ -35,7 +35,7 @@ export default function Hero() {
 
           {/* Subheadline */}
           <p className="text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Join Colombia's most exclusive content creator platform.
+            Join Havana's most exclusive content creator platform.
             Monetize your audience with luxury branding and seamless payments.
           </p>
 
