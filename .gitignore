@@ -24,10 +24,11 @@ dist-ssr
 *.sw?
 
 .config/
-!.env
 node_modules/
 .pnpm/
 .next/
 dist/
 build/
 .vercel/output/
+.env
+.env.local
