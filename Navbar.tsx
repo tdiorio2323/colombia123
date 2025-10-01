@@ -8,14 +8,9 @@ import {
   Sparkles,
   Ship,
   Instagram,
-  User,
-  LogOut,
-  Upload,
-  MessageCircle,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { useAuth } from "@/contexts/AuthContext";
 import React from "react";
 
 interface NavbarProps {
@@ -25,8 +20,6 @@ interface NavbarProps {
 export function Navbar({ className }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [liveCount, setLiveCount] = useState(2847521); // Example live count
-  const { user, profile, signOut } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,11 +35,6 @@ export function Navbar({ className }: NavbarProps) {
     }, 4000);
     return () => clearInterval(interval);
   }, []);
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
-  };
 
   return (
     <nav
@@ -70,94 +58,16 @@ export function Navbar({ className }: NavbarProps) {
             </div>
           </Link>
           <div className="flex items-center space-x-6">
-            {user && profile ? (
-              // Logged in user navigation
-              <>
-                {profile.role === "creator" && (
-                  <>
-                    <Link
-                      to="/upload"
-                      className="text-gold/80 hover:text-gold transition-colors flex items-center"
-                    >
-                      <Upload className="h-5 w-5 mr-2" />
-                      Upload
-                    </Link>
-                    <Link
-                      to="/messages"
-                      className="text-gold/80 hover:text-gold transition-colors flex items-center"
-                    >
-                      <MessageCircle className="h-5 w-5 mr-2" />
-                      Messages
-                    </Link>
-                  </>
-                )}
-                {profile.role === "fan" && (
-                  <>
-                    <Link
-                      to="/shop"
-                      className="text-gold/80 hover:text-gold transition-colors flex items-center"
-                    >
-                      <ShoppingCart className="h-5 w-5 mr-2" />
-                      Shop
-                    </Link>
-                    <Link
-                      to="/calendar"
-                      className="text-gold/80 hover:text-gold transition-colors flex items-center"
-                    >
-                      <Calendar className="h-5 w-5 mr-2" />
-                      Book
-                    </Link>
-                  </>
-                )}
-                <Link
-                  to="/profile"
-                  className="text-gold/80 hover:text-gold transition-colors flex items-center"
-                >
-                  <User className="h-5 w-5 mr-2" />
-                  {profile.display_name || profile.username}
-                </Link>
-                <Button
-                  onClick={handleSignOut}
-                  variant="ghost"
-                  className="text-gold/80 hover:text-gold transition-colors"
-                >
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
-                </Button>
-              </>
-            ) : (
-              // Guest navigation
-              <>
-                <Link
-                  to="/shop"
-                  className="text-gold/80 hover:text-gold transition-colors flex items-center"
-                >
-                  <ShoppingCart className="h-5 w-5 mr-2" />
-                  Shop
-                </Link>
-                <Link
-                  to="/calendar"
-                  className="text-gold/80 hover:text-gold transition-colors flex items-center"
-                >
-                  <Calendar className="h-5 w-5 mr-2" />
-                  Book
-                </Link>
-                <Link to="/login">
-                  <Button
-                    variant="ghost"
-                    className="text-gold/80 hover:text-gold transition-colors"
-                  >
-                    Sign In
-                  </Button>
-                </Link>
-                <Link to="/signup">
-                  <Button className="btn-luxury">
-                    <Crown className="h-4 w-4 mr-2" />
-                    Join Now
-                  </Button>
-                </Link>
-              </>
-            )}
+            <Link to="/shop" className="text-gold/80 hover:text-gold transition-colors flex items-center">
+              <ShoppingCart className="h-5 w-5 mr-2" />
+              Shop
+            </Link>
+            <Link to="/calendar" className="text-gold/80 hover:text-gold transition-colors flex items-center">
+              <Calendar className="h-5 w-5 mr-2" />
+              Book
+            </Link>
+            {/* You can add more navigation items here */}
+            {/* Example: <Button variant="ghost" className="text-gold">Sign In</Button> */}
           </div>
         </div>
       </div>
@@ -165,4 +75,4 @@ export function Navbar({ className }: NavbarProps) {
   );
 }
 
-export default Navbar;
+export default Navbar

@@ -122,6 +122,15 @@ export default function Community() {
                 Access community-only posts
               </p>
             </Card>
+             <Card className="p-6 text-center">
+              <h3 className="font-display font-semibold text-lg mb-2">
+               Sample Text
+              </h3>
+              <p className="text-muted-foreground text-sm">
+              No," she said quite simply, "it will not be necessary.<br/>
+              You can tell them just as well. I must go with you on your journey."
+              </p>
+            </Card>
           </div>
 
           <div className="space-y-4">

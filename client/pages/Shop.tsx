@@ -1,15 +1,30 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, Crown, Star, Filter, Search, Heart } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ShoppingCart, Star, Filter, Search, Heart } from 'lucide-react';
+import { Navbar } from '@/components/Navbar';
+
+// Define a type for our product for better type safety
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+  originalPrice?: number;
+  image: string;
+  category: string;
+  stock: string;
+  description: string;
+  rating: number;
+  reviews: number;
+};
 
 export default function Shop() {
-  const [cart, setCart] = useState<any[]>([]);
+  const [cart, setCart] = useState<Product[]>([]);
   const [filter, setFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const products = [
+  const products: Product[] = [
     {
       id: 1,
       name: 'Signed Debut Album',
@@ -79,50 +94,43 @@ export default function Shop() {
     },
   ];
 
-  const categories = [
-    { id: 'all', name: 'All Items', count: products.length },
-    { id: 'music', name: 'Music', count: products.filter(p => p.category === 'music').length },
-    { id: 'apparel', name: 'Apparel', count: products.filter(p => p.category === 'apparel').length },
-    { id: 'jewelry', name: 'Jewelry', count: products.filter(p => p.category === 'jewelry').length },
-    { id: 'experiences', name: 'Experiences', count: products.filter(p => p.category === 'experiences').length },
-    { id: 'digital', name: 'Digital', count: products.filter(p => p.category === 'digital').length },
-    { id: 'collectibles', name: 'Collectibles', count: products.filter(p => p.category === 'collectibles').length },
-  ];
+  // useMemo will prevent recalculating categories on every render
+  const categories = useMemo(() => {
+    const categoryCounts = products.reduce((acc, product) => {
+      acc[product.category] = (acc[product.category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>); // Fix: Added missing comma here
+    
+    const allCategories = [
+      { id: 'all', name: 'All Items', count: products.length },
+      ...Object.keys(categoryCounts).map(cat => ({ id: cat, name: cat.charAt(0).toUpperCase() + cat.slice(1), count: categoryCounts[cat] }))
+    ];
+    return allCategories;
+  }, [products]);
 
-  const filteredProducts = filter === 'all' ? products : products.filter(p => p.category === filter);
+  const filteredProducts = useMemo(() => {
+    return products
+      .filter(p => filter === 'all' || p.category === filter)
+      .filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  }, [products, filter, searchTerm]);
 
-  const addToCart = (product: any) => {
+  const addToCart = (product: Product) => {
     setCart(prev => [...prev, product]);
   };
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2">
-              <Crown className="h-8 w-8 text-gold" />
-              <span className="text-2xl font-display font-bold">Eimy Contreras</span>
-            </Link>
-            <div className="hidden md:flex items-center space-x-8">
-              <Link to="/services" className="hover:text-gold transition-colors">Services</Link>
-              <Link to="/shop" className="text-gold transition-colors">Shop</Link>
-              <Link to="/community" className="hover:text-gold transition-colors">Community</Link>
-              <Link to="/calendar" className="hover:text-gold transition-colors">Calendar</Link>
-            </div>
-            <Button className="btn-gold relative">
-              <ShoppingCart className="h-5 w-5 mr-2" />
-              Cart
-              {cart.length > 0 && (
-                <Badge className="absolute -top-2 -right-2 bg-primary text-primary-foreground min-w-[20px] h-5 rounded-full text-xs">
-                  {cart.length}
-                </Badge>
-              )}
-            </Button>
-          </div>
-        </div>
-      </nav>
+      <Navbar className="sticky glass-nav py-4">
+        <Button className="btn-gold relative" onClick={() => console.log('Cart clicked')}>
+          <ShoppingCart className="h-5 w-5 mr-2" />
+          Cart
+          {cart.length > 0 && (
+            <Badge className="absolute -top-2 -right-2 bg-primary text-primary-foreground min-w-[20px] h-5 rounded-full text-xs">
+              {cart.length}
+            </Badge>
+          )}
+        </Button>
+      </Navbar>
 
       {/* Hero */}
       <section className="py-16 bg-gradient-to-br from-cream via-background to-gold/10">
@@ -151,6 +159,8 @@ export default function Shop() {
                       <input 
                         type="text"
                         placeholder="Search products..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 border border-input rounded-md focus:ring-2 focus:ring-gold focus:border-transparent"
                       />
                     </div>
@@ -298,7 +308,7 @@ export default function Shop() {
                     ${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)} total
                   </div>
                 </div>
-                <Button className="btn-gold">
+                <Button className="btn-gold" onClick={() => console.log('Checkout clicked')}>
                   Checkout
                 </Button>
               </div>

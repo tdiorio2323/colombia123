@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Heart, Play, Mail, Crown, Clock, Star, Users } from 'lucide-react';
+import { Heart, Play, Mail, Clock, Star } from 'lucide-react';
+import { Navbar } from '@/components/Navbar';
 import { Link } from 'react-router-dom';
 
 export default function Services() {
@@ -50,27 +51,11 @@ export default function Services() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2">
-              <Crown className="h-8 w-8 text-gold" />
-              <span className="text-2xl font-display font-bold">Eimy Contreras</span>
-            </Link>
-            <div className="hidden md:flex items-center space-x-8">
-              <Link to="/services" className="text-gold transition-colors">Services</Link>
-              <Link to="/shop" className="hover:text-gold transition-colors">Shop</Link>
-              <Link to="/community" className="hover:text-gold transition-colors">Community</Link>
-              <Link to="/calendar" className="hover:text-gold transition-colors">Calendar</Link>
-            </div>
-            <Button className="btn-gold">
-              Join VIP
-            </Button>
-          </div>
-        </div>
-      </nav>
-
+      <Navbar>
+        <Button asChild className="btn-gold hidden md:inline-flex">
+          <Link to="/community">Join VIP</Link>
+        </Button>
+      </Navbar>
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-cream via-background to-gold/10">
         <div className="container mx-auto px-4 text-center">
