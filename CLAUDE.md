@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Overview
+
+**Havana** is a creator monetization platform built with React, Express, TypeScript, and Vite. The platform enables content creators to connect with fans through subscriptions, direct messaging, and content sharing, with integrated Stripe payments and Supabase authentication.
+
 ## Development Commands
 
 ### Core Development
@@ -17,13 +21,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Run specific tests: `npm test -- path/to/test.spec.ts` or `npm test -- --grep "test name"`
 
+### Quality Audits
+
+- `npm run audit:routes` - Crawl and verify all application routes
+- `npm run audit:links` - Check for broken links using linkinator
+- `npm run audit:lighthouse` - Run Lighthouse performance audit
+- `npm run audit:a11y` - Run pa11y accessibility tests
+- `npm run audit:zap` - Security scan using OWASP ZAP
+- `npm run audit:all` - Run all audits sequentially
+
 ### Documentation
 
 - `npm run docs:refresh` - Regenerate PROJECT_OVERVIEW.md, ROUTES.md, and README.md overview
 
 ## Architecture Overview
-
-This is **Fusion Starter** - a production-ready full-stack React + Express starter template built with Vite, TypeScript, TailwindCSS, and Vitest.
 
 ### Project Structure
 
@@ -33,23 +44,50 @@ client/                 # React SPA frontend
 │   └── ui/            # shadcn/ui component library (Radix + Tailwind)
 ├── pages/             # Route components
 │   ├── Index.tsx      # Home page
+│   ├── Login.tsx      # Authentication
+│   ├── Signup.tsx
+│   ├── Profile.tsx    # User profile
+│   ├── Messages.tsx   # Direct messaging
+│   ├── Leaderboard.tsx
+│   ├── Upload.tsx     # Media upload
+│   ├── Showcase.tsx   # Creator showcase
+│   ├── SmartReply.tsx # AI-powered replies
 │   ├── Services.tsx
 │   ├── Shop.tsx
 │   ├── Community.tsx
 │   ├── Calendar.tsx
 │   └── NotFound.tsx   # 404 page
-├── lib/
-│   └── utils.ts       # cn() utility (clsx + tailwind-merge)
-├── global.css         # Tailwind directives and global styles
-└── App.tsx            # React Router 6 routing and providers
+├── contexts/          # React contexts (auth, theme, etc.)
+├── hooks/             # Custom React hooks
+└── lib/
+    └── utils.ts       # cn() utility (clsx + tailwind-merge)
 
 server/                # Express API backend
 ├── index.ts           # Server setup (createServer export)
-└── routes/            # API route handlers
-    └── demo.ts        # Example route handler
+├── routes/            # API route handlers
+│   ├── auth.ts        # Authentication endpoints
+│   ├── creators.ts    # Creator management
+│   ├── subscriptions.ts # Stripe subscription handling
+│   ├── payouts.ts     # Payment distribution
+│   ├── messages.ts    # Messaging system
+│   ├── profiles.ts    # User profiles
+│   ├── upload.ts      # File upload
+│   ├── media.ts       # Media management
+│   ├── smart-reply.ts # AI reply generation
+│   ├── users.ts       # User management
+│   ├── webhooks.ts    # Stripe webhooks
+│   └── db.ts          # Database utilities
+├── middleware/        # Express middleware
+├── services/          # Business logic layer
+└── lib/               # Server utilities
 
 shared/                # TypeScript interfaces shared between client/server
 └── api.ts             # Type definitions for API contracts
+
+prisma/                # Database schema and migrations
+├── schema.prisma      # Prisma schema definition
+├── migrations/        # Database migrations
+└── seed.ts            # Database seeding script
 ```
 
 ### Key Architectural Patterns
@@ -84,11 +122,16 @@ The `vite.config.ts` includes an `expressPlugin()` that mounts the Express app a
 - TanStack React Query for server state
 - Framer Motion for animations
 - Lucide React for icons
+- Three.js with React Three Fiber for 3D graphics
 
 **Backend:**
 
 - Express.js with CORS and JSON middleware
 - Zod for validation
+- Supabase for authentication and real-time database
+- Stripe for payment processing
+- Prisma as database ORM
+- Gemini AI for smart reply generation
 
 **Build & Testing:**
 
@@ -101,6 +144,7 @@ The `vite.config.ts` includes an `expressPlugin()` that mounts the Express app a
 
 - Prettier for code formatting
 - pnpm as package manager (see packageManager field in package.json)
+- Docker & Docker Compose for containerization
 
 ### Development Workflow
 
@@ -109,6 +153,26 @@ The `vite.config.ts` includes an `expressPlugin()` that mounts the Express app a
 - `.env` for environment variables loaded via dotenv
 - Client variables must be prefixed with `VITE_`
 - Server variables loaded in `server/index.ts` via `dotenv/config`
+
+**Required Environment Variables** (see `.env.example`):
+
+- `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` - Supabase config
+- `GEMINI_API_KEY` - AI integration
+- `STRIPE_SECRET_KEY`, `VITE_STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET` - Stripe payment integration
+
+#### Database Setup
+
+The project uses Prisma with Supabase. Database schema is defined in `prisma/schema.prisma`. For database setup:
+
+1. Configure Supabase URL and keys in `.env`
+2. Run migrations: `npx prisma migrate dev`
+3. Seed database: `npx prisma db seed`
+
+See `DATABASE_MIGRATION_COMPLETE.md` for migration details.
+
+#### Payment Integration
+
+Stripe is integrated for subscription payments. See `STRIPE_SETUP.md` and `PAYMENT_SYSTEM_COMPLETE.md` for detailed setup instructions. Webhook endpoints are handled in `server/routes/webhooks.ts`.
 
 #### Testing Strategy
 
@@ -131,6 +195,8 @@ The `vite.config.ts` includes an `expressPlugin()` that mounts the Express app a
 - Server serves static files from `dist/spa/`
 - Netlify functions available in `netlify/functions/`
 - `netlify.toml` and `api/index.ts` configured for serverless deployment
+- Docker Compose configuration available for containerized deployment
+- See `RUNBOOK.md` for operations procedures
 
 ## Critical Implementation Notes
 
@@ -157,12 +223,23 @@ Use `shared/api.ts` for TypeScript interfaces that both client and server need. 
 
 shadcn/ui components are in `client/components/ui/`. These are copied into your project (not installed as npm packages) and can be customized. Configuration in `components.json`.
 
-### Repository Guidelines
+### Security Considerations
 
-See `AGENTS.md` for detailed contributor guidelines including:
+- Never commit secrets or API keys (check `.gitignore`)
+- Validate all inputs with Zod on the server
+- Use Supabase Row Level Security (RLS) for database access control
+- Stripe webhook signatures are verified in webhook handlers
+- See `SECURITY.md` for comprehensive security guidelines
 
-- Module organization patterns
-- Coding style and naming conventions
-- Testing requirements
-- Commit message format
-- Security and configuration best practices
+### AI Integration
+
+Smart reply features use Gemini AI. The `server/routes/smart-reply.ts` endpoint requires `GEMINI_API_KEY` to be configured. See `GEMINI.md` for integration details.
+
+## Additional Documentation
+
+- **AGENTS.md** - Repository guidelines for contributors (coding style, testing, commit format)
+- **RUNBOOK.md** - Operations guide (deployment, monitoring, maintenance, incident response)
+- **SECURITY.md** - Security best practices and policies
+- **STRIPE_SETUP.md** - Payment integration setup guide
+- **PAYMENT_SYSTEM_COMPLETE.md** - Payment system implementation details
+- **DATABASE_MIGRATION_COMPLETE.md** - Database migration notes
