@@ -18,6 +18,10 @@ import Leaderboard from "./pages/Leaderboard";
 import ProfilePage from "./pages/Profile";
 import CreatorPage from "./components/CreatorPage";
 import ShowcasePage from "./pages/Showcase";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Messages from "./pages/Messages";
+import Upload from "./pages/Upload";
 
 import { creators } from "./data/creators.tsx";
 
@@ -40,6 +44,10 @@ const App = () => (
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/showcase" element={<ShowcasePage />} />
           <Route path="/c/:username" element={<CreatorPage creator={creators[0]} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/upload" element={<Upload />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
