@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { Request, Response } from "express";
 import { stripeService } from "../services/stripeService";
-import { supabase } from "../lib/supabase"; // TEMPORARY STUB during migration
-import { prisma } from "../lib/prisma";
+import { prisma, handlePrismaError } from "../lib/prisma";
 
 const creators = Router();
 
@@ -17,27 +16,36 @@ creators.post("/onboard", async (req: Request, res: Response) => {
         .json({ error: "Creator ID and email are required" });
     }
 
-    // Check if creator exists
-    const { data: creator } = await supabase
-      .from("creators")
-      .select("*")
-      .eq("id", creatorId)
-      .single();
+    // Check if creator profile exists
+    const creator = await prisma.profile.findUnique({
+      where: { id: creatorId },
+      select: {
+        id: true,
+        userId: true,
+        username: true,
+        role: true,
+        stripeAccountId: true,
+      },
+    });
 
     if (!creator) {
       return res.status(404).json({ error: "Creator not found" });
     }
 
+    if (creator.role !== "CREATOR") {
+      return res.status(403).json({ error: "Profile is not a creator" });
+    }
+
     // Check if already has Stripe account
-    if (creator.stripe_account_id) {
+    if (creator.stripeAccountId) {
       // Get existing onboarding link if account exists but not complete
       const accountStatus = await stripeService.checkAccountStatus(
-        creator.stripe_account_id,
+        creator.stripeAccountId,
       );
 
       if (!accountStatus.is_complete) {
         const onboardingLink = await stripeService.createConnectOnboardingLink(
-          creator.stripe_account_id,
+          creator.stripeAccountId,
           creatorId,
         );
         return res.json({
@@ -60,6 +68,12 @@ creators.post("/onboard", async (req: Request, res: Response) => {
       country,
     );
 
+    // Save Stripe account ID to profile
+    await prisma.profile.update({
+      where: { id: creatorId },
+      data: { stripeAccountId: account.id },
+    });
+
     // Generate onboarding link
     const onboardingLink = await stripeService.createConnectOnboardingLink(
       account.id,
@@ -73,7 +87,8 @@ creators.post("/onboard", async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error starting onboarding:", error);
-    res.status(500).json({ error: "Failed to start onboarding process" });
+    const dbError = handlePrismaError(error);
+    res.status(500).json(dbError);
   }
 });
 
@@ -85,17 +100,24 @@ creators.get(
       const { creatorId } = req.params;
 
       // Get creator's Stripe account ID
-      const { data: creator } = await supabase
-        .from("creators")
-        .select("stripe_account_id, payout_enabled, onboarding_complete")
-        .eq("id", creatorId)
-        .single();
+      const creator = await prisma.profile.findUnique({
+        where: { id: creatorId },
+        select: {
+          id: true,
+          stripeAccountId: true,
+          role: true,
+        },
+      });
 
       if (!creator) {
         return res.status(404).json({ error: "Creator not found" });
       }
 
-      if (!creator.stripe_account_id) {
+      if (creator.role !== "CREATOR") {
+        return res.status(403).json({ error: "Profile is not a creator" });
+      }
+
+      if (!creator.stripeAccountId) {
         return res.json({
           status: "not_started",
           message: "Onboarding not started",
@@ -105,19 +127,8 @@ creators.get(
 
       // Check Stripe account status
       const accountStatus = await stripeService.checkAccountStatus(
-        creator.stripe_account_id,
+        creator.stripeAccountId,
       );
-
-      // Update database if status changed
-      if (accountStatus.is_complete !== creator.onboarding_complete) {
-        await supabase
-          .from("creators")
-          .update({
-            payout_enabled: accountStatus.payouts_enabled,
-            onboarding_complete: accountStatus.is_complete,
-          })
-          .eq("id", creatorId);
-      }
 
       res.json({
         status: accountStatus.is_complete ? "completed" : "pending",
@@ -127,7 +138,8 @@ creators.get(
       });
     } catch (error) {
       console.error("Error checking onboarding status:", error);
-      res.status(500).json({ error: "Failed to check onboarding status" });
+      const dbError = handlePrismaError(error);
+      res.status(500).json(dbError);
     }
   },
 );
@@ -159,62 +171,83 @@ creators.get("/dashboard/:creatorId", async (req: Request, res: Response) => {
         startDate.setDate(endDate.getDate() - 30);
     }
 
-    // Get creator info
-    const { data: creator } = await supabase
-      .from("creators")
-      .select("*")
-      .eq("id", creatorId)
-      .single();
+    // Get creator profile
+    const creator = await prisma.profile.findUnique({
+      where: { id: creatorId },
+      select: {
+        id: true,
+        username: true,
+        displayName: true,
+        avatarUrl: true,
+        subscriptionPrice: true,
+        stripeAccountId: true,
+        totalEarnings: true,
+        subscriberCount: true,
+        role: true,
+      },
+    });
 
     if (!creator) {
       return res.status(404).json({ error: "Creator not found" });
     }
 
+    if (creator.role !== "CREATOR") {
+      return res.status(403).json({ error: "Profile is not a creator" });
+    }
+
     // Get earnings data
-    const { data: earnings } = await supabase
-      .from("creator_earnings")
-      .select("*")
-      .eq("creator_id", creatorId)
-      .gte("created_at", startDate.toISOString())
-      .lte("created_at", endDate.toISOString());
+    const earnings = await prisma.creatorEarning.findMany({
+      where: {
+        creatorId,
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      orderBy: { date: "desc" },
+    });
 
     // Get subscriber count
-    const { count: subscriberCount } = await supabase
-      .from("subscriptions")
-      .select("*", { count: "exact" })
-      .eq("creator_id", creatorId)
-      .eq("is_active", true);
+    const subscriberCount = await prisma.subscription.count({
+      where: {
+        creatorId,
+        isActive: true,
+      },
+    });
 
     // Get recent transactions
-    const { data: recentTransactions } = await supabase
-      .from("transactions")
-      .select(
-        `
-        *,
-        users (name, avatar_url)
-      `,
-      )
-      .eq("to_user_id", creatorId)
-      .order("created_at", { ascending: false })
-      .limit(10);
+    const recentTransactions = await prisma.transaction.findMany({
+      where: { creatorId },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+      include: {
+        buyer: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
 
     // Calculate totals
     const totalEarnings =
-      earnings?.reduce((sum, e) => sum + e.net_amount, 0) || 0;
+      earnings?.reduce((sum, e) => sum + e.totalNet, 0) || 0;
     const totalFees =
-      earnings?.reduce((sum, e) => sum + e.platform_fee, 0) || 0;
-    const pendingBalance =
-      earnings
-        ?.filter((e) => e.status === "pending")
-        .reduce((sum, e) => sum + e.net_amount, 0) || 0;
+      earnings?.reduce((sum, e) => sum + e.platformFee + e.stripeFee, 0) || 0;
 
-    // Get Stripe balance if onboarding complete
+    // Get Stripe balance if has account
     let stripeBalance = null;
-    if (creator.stripe_account_id && creator.onboarding_complete) {
+    if (creator.stripeAccountId) {
       try {
-        stripeBalance = await stripeService.getBalance(
-          creator.stripe_account_id,
+        const accountStatus = await stripeService.checkAccountStatus(
+          creator.stripeAccountId,
         );
+        if (accountStatus.is_complete) {
+          stripeBalance = await stripeService.getBalance(
+            creator.stripeAccountId,
+          );
+        }
       } catch (error) {
         console.error("Error fetching Stripe balance:", error);
       }
@@ -223,18 +256,16 @@ creators.get("/dashboard/:creatorId", async (req: Request, res: Response) => {
     res.json({
       creator: {
         id: creator.id,
-        name: creator.name,
+        name: creator.displayName,
         username: creator.username,
-        avatar_url: creator.avatar_url,
-        subscription_price: creator.subscription_price,
-        onboarding_complete: creator.onboarding_complete,
-        payout_enabled: creator.payout_enabled,
+        avatar_url: creator.avatarUrl,
+        subscription_price: creator.subscriptionPrice || 0,
       },
       stats: {
         total_earnings: totalEarnings / 100, // Convert cents to dollars
         total_fees: totalFees / 100,
-        pending_balance: pendingBalance / 100,
-        subscriber_count: subscriberCount || 0,
+        pending_balance: 0, // Can be calculated from pending transactions if needed
+        subscriber_count: subscriberCount,
         transactions_count: earnings?.length || 0,
       },
       stripe_balance: stripeBalance
@@ -248,7 +279,8 @@ creators.get("/dashboard/:creatorId", async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error fetching creator dashboard:", error);
-    res.status(500).json({ error: "Failed to fetch dashboard data" });
+    const dbError = handlePrismaError(error);
+    res.status(500).json(dbError);
   }
 });
 
@@ -264,26 +296,47 @@ creators.post("/payout", async (req: Request, res: Response) => {
         .json({ error: "Creator ID and amount (minimum $10.00) are required" });
     }
 
-    // Get creator info
-    const { data: creator } = await supabase
-      .from("creators")
-      .select("*")
-      .eq("id", creatorId)
-      .single();
+    // Get creator profile
+    const creator = await prisma.profile.findUnique({
+      where: { id: creatorId },
+      select: {
+        id: true,
+        userId: true,
+        stripeAccountId: true,
+        role: true,
+      },
+    });
 
     if (!creator) {
       return res.status(404).json({ error: "Creator not found" });
     }
 
-    if (!creator.stripe_account_id || !creator.payout_enabled) {
+    if (creator.role !== "CREATOR") {
+      return res.status(403).json({ error: "Profile is not a creator" });
+    }
+
+    if (!creator.stripeAccountId) {
       return res
         .status(400)
         .json({ error: "Payout not available. Complete onboarding first." });
     }
 
+    // Check account status
+    const accountStatus = await stripeService.checkAccountStatus(
+      creator.stripeAccountId,
+    );
+
+    if (!accountStatus.payouts_enabled) {
+      return res
+        .status(400)
+        .json({
+          error: "Payouts not enabled. Complete onboarding verification.",
+        });
+    }
+
     // Check available balance
     const stripeBalance = await stripeService.getBalance(
-      creator.stripe_account_id,
+      creator.stripeAccountId,
     );
 
     if (stripeBalance.total_available < amount) {
@@ -296,18 +349,22 @@ creators.post("/payout", async (req: Request, res: Response) => {
 
     // Create payout
     const payout = await stripeService.createPayout(
-      creator.stripe_account_id,
+      creator.stripeAccountId,
       amount,
     );
 
     // Record payout in database
-    await supabase.from("transactions").insert({
-      to_user_id: creatorId,
-      stripe_payment_intent_id: payout.id,
-      amount: amount / 100,
-      currency: "usd",
-      type: "payout",
-      status: payout.status,
+    await prisma.transaction.create({
+      data: {
+        buyerId: creator.userId,
+        creatorId: creator.id,
+        type: "TIP", // Prisma enum doesn't have PAYOUT, using TIP as placeholder
+        amount,
+        currency: "usd",
+        status: payout.status === "paid" ? "COMPLETED" : "PENDING",
+        stripePiId: payout.id,
+        description: `Payout of $${amount / 100}`,
+      },
     });
 
     res.json({
@@ -323,7 +380,8 @@ creators.post("/payout", async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error creating payout:", error);
-    res.status(500).json({ error: "Failed to initiate payout" });
+    const dbError = handlePrismaError(error);
+    res.status(500).json(dbError);
   }
 });
 
@@ -340,25 +398,27 @@ creators.put("/subscription-price", async (req: Request, res: Response) => {
     }
 
     // Update creator's subscription price
-    const { data, error } = await supabase
-      .from("creators")
-      .update({ subscription_price: price })
-      .eq("id", creatorId)
-      .select()
-      .single();
-
-    if (error) {
-      throw error;
-    }
+    const updatedProfile = await prisma.profile.update({
+      where: { id: creatorId },
+      data: { subscriptionPrice: price },
+      select: {
+        id: true,
+        username: true,
+        displayName: true,
+        subscriptionPrice: true,
+        role: true,
+      },
+    });
 
     res.json({
       message: "Subscription price updated successfully",
-      creator: data,
+      creator: updatedProfile,
       price: price / 100, // Return in dollars
     });
   } catch (error) {
     console.error("Error updating subscription price:", error);
-    res.status(500).json({ error: "Failed to update subscription price" });
+    const dbError = handlePrismaError(error);
+    res.status(500).json(dbError);
   }
 });
 
@@ -366,41 +426,39 @@ creators.put("/subscription-price", async (req: Request, res: Response) => {
 creators.get("/earnings/:creatorId", async (req: Request, res: Response) => {
   try {
     const { creatorId } = req.params;
-    const { page = 1, limit = 50, type } = req.query;
+    const { page = 1, limit = 50 } = req.query;
 
-    const offset = (Number(page) - 1) * Number(limit);
+    const skip = (Number(page) - 1) * Number(limit);
+    const take = Number(limit);
 
-    let query = supabase
-      .from("creator_earnings")
-      .select("*", { count: "exact" })
-      .eq("creator_id", creatorId)
-      .order("created_at", { ascending: false })
-      .range(offset, offset + Number(limit) - 1);
+    // Get earnings with pagination
+    const [earnings, total] = await Promise.all([
+      prisma.creatorEarning.findMany({
+        where: { creatorId },
+        orderBy: { date: "desc" },
+        skip,
+        take,
+      }),
+      prisma.creatorEarning.count({
+        where: { creatorId },
+      }),
+    ]);
 
-    if (type && type !== "all") {
-      query = query.eq("type", type);
-    }
-
-    const { data: earnings, error, count } = await query;
-
-    if (error) {
-      throw error;
-    }
-
-    const totalPages = Math.ceil((count || 0) / Number(limit));
+    const totalPages = Math.ceil(total / take);
 
     res.json({
       earnings: earnings || [],
       pagination: {
         page: Number(page),
-        limit: Number(limit),
-        total: count || 0,
+        limit: take,
+        total,
         totalPages,
       },
     });
   } catch (error) {
     console.error("Error fetching earnings history:", error);
-    res.status(500).json({ error: "Failed to fetch earnings history" });
+    const dbError = handlePrismaError(error);
+    res.status(500).json(dbError);
   }
 });
 
@@ -410,38 +468,47 @@ creators.get("/payouts/:creatorId", async (req: Request, res: Response) => {
     const { creatorId } = req.params;
     const { page = 1, limit = 20 } = req.query;
 
-    const offset = (Number(page) - 1) * Number(limit);
+    const skip = (Number(page) - 1) * Number(limit);
+    const take = Number(limit);
 
-    const {
-      data: payouts,
-      error,
-      count,
-    } = await supabase
-      .from("transactions")
-      .select("*", { count: "exact" })
-      .eq("to_user_id", creatorId)
-      .eq("type", "payout")
-      .order("created_at", { ascending: false })
-      .range(offset, offset + Number(limit) - 1);
+    // Get payouts (filter by description containing "Payout")
+    const [payouts, total] = await Promise.all([
+      prisma.transaction.findMany({
+        where: {
+          creatorId,
+          description: {
+            contains: "Payout",
+          },
+        },
+        orderBy: { createdAt: "desc" },
+        skip,
+        take,
+      }),
+      prisma.transaction.count({
+        where: {
+          creatorId,
+          description: {
+            contains: "Payout",
+          },
+        },
+      }),
+    ]);
 
-    if (error) {
-      throw error;
-    }
-
-    const totalPages = Math.ceil((count || 0) / Number(limit));
+    const totalPages = Math.ceil(total / take);
 
     res.json({
       payouts: payouts || [],
       pagination: {
         page: Number(page),
-        limit: Number(limit),
-        total: count || 0,
+        limit: take,
+        total,
         totalPages,
       },
     });
   } catch (error) {
     console.error("Error fetching payout history:", error);
-    res.status(500).json({ error: "Failed to fetch payout history" });
+    const dbError = handlePrismaError(error);
+    res.status(500).json(dbError);
   }
 });
 
