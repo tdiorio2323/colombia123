@@ -2,6 +2,7 @@ import { Router } from "express";
 import { supabase } from "../lib/supabase"; // TEMPORARY STUB during migration
 import { Request, Response } from "express";
 import { paymentService } from "../services/paymentService";
+import { loggers } from "@server/lib/logger";
 
 const payouts = Router();
 
@@ -58,7 +59,7 @@ payouts.get("/earnings/:creatorId", async (req: Request, res: Response) => {
       payout_history: payoutHistory || [],
     });
   } catch (error) {
-    console.error("Error fetching earnings:", error);
+    loggers.payment.error("Error fetching earnings:", error);
     res.status(500).json({ error: "Failed to fetch earnings data" });
   }
 });
@@ -111,7 +112,7 @@ payouts.post("/request/:creatorId", async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.error("Error processing payout request:", error);
+    loggers.payment.error("Error processing payout request:", error);
     res.status(500).json({ error: "Failed to process payout request" });
   }
 });
@@ -185,7 +186,7 @@ payouts.get("/platform/analytics", async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching platform analytics:", error);
+    loggers.payment.error("Error fetching platform analytics:", error);
     res.status(500).json({ error: "Failed to fetch analytics" });
   }
 });
@@ -206,7 +207,7 @@ payouts.post(
         message: "Complete Stripe account setup to receive payouts",
       });
     } catch (error) {
-      console.error("Error setting up Stripe Connect:", error);
+      loggers.payment.error("Error setting up Stripe Connect:", error);
       res.status(500).json({ error: "Failed to setup payment account" });
     }
   },

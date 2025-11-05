@@ -2,7 +2,8 @@ import { Router } from "express";
 import { Request, Response } from "express";
 import { z } from "zod";
 import { prisma, handlePrismaError } from "../lib/prisma";
-import { hashPassword, verifyPassword, generateToken } from "../lib/auth";
+import { hashPassword, verifyPassword, generateToken, JWTPayload } from "../lib/auth";
+import jwt from "jsonwebtoken";
 
 const auth = Router();
 
@@ -92,8 +93,8 @@ auth.post("/signup", async (req: Request, res: Response) => {
         token,
       },
     });
-  } catch (error: any) {
-    if (error.name === "ZodError") {
+  } catch (error) {
+    if (error instanceof z.ZodError) {
       return res.status(400).json({ error: "Invalid input data", details: error.errors });
     }
     const dbError = handlePrismaError(error);
@@ -145,8 +146,8 @@ auth.post("/signin", async (req: Request, res: Response) => {
         token,
       },
     });
-  } catch (error: any) {
-    if (error.name === "ZodError") {
+  } catch (error) {
+    if (error instanceof z.ZodError) {
       return res.status(400).json({ error: "Invalid input data", details: error.errors });
     }
     const dbError = handlePrismaError(error);
@@ -166,11 +167,10 @@ auth.get("/me", async (req: Request, res: Response) => {
 
     // This would typically use the authenticateToken middleware
     // For now, we'll implement it inline
-    const jwt = require("jsonwebtoken");
     const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
     try {
-      const payload = jwt.verify(token, JWT_SECRET) as any;
+      const payload = jwt.verify(token, JWT_SECRET) as JWTPayload;
 
       const user = await prisma.user.findUnique({
         where: { id: payload.userId },
@@ -212,11 +212,10 @@ auth.post("/change-password", async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Access token required" });
     }
 
-    const jwt = require("jsonwebtoken");
     const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
     try {
-      const payload = jwt.verify(token, JWT_SECRET) as any;
+      const payload = jwt.verify(token, JWT_SECRET) as JWTPayload;
 
       const user = await prisma.user.findUnique({
         where: { id: payload.userId },
@@ -245,8 +244,8 @@ auth.post("/change-password", async (req: Request, res: Response) => {
     } catch (jwtError) {
       return res.status(403).json({ error: "Invalid or expired token" });
     }
-  } catch (error: any) {
-    if (error.name === "ZodError") {
+  } catch (error) {
+    if (error instanceof z.ZodError) {
       return res.status(400).json({ error: "Invalid input data", details: error.errors });
     }
     const dbError = handlePrismaError(error);
@@ -264,11 +263,10 @@ auth.post("/refresh", async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Access token required" });
     }
 
-    const jwt = require("jsonwebtoken");
     const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
     try {
-      const payload = jwt.verify(token, JWT_SECRET) as any;
+      const payload = jwt.verify(token, JWT_SECRET) as JWTPayload;
 
       const user = await prisma.user.findUnique({
         where: { id: payload.userId },

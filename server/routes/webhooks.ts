@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import { Request, Response } from "express";
 import { stripeService, stripe } from "../services/stripeService";
+import { loggers } from "@server/lib/logger";
 // import { supabase } from "../lib/supabase"; // DISABLED - migrated to Prisma
 
 const webhooks = Router();
@@ -19,14 +20,14 @@ webhooks.post(
       // Verify webhook signature using Stripe SDK
       event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
 
-      console.log(`Processing webhook event: ${event.type}`);
+      loggers.payment.info(`Processing webhook event: ${event.type}`);
 
       // Use the StripeService to process the event
       await stripeService.processWebhookEvent(event);
 
       res.json({ received: true });
     } catch (err: any) {
-      console.error("Webhook signature verification failed:", err.message);
+      loggers.payment.error("Webhook signature verification failed:", err.message);
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
   },

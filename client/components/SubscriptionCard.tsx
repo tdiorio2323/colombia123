@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { Creator } from "@shared/api";
 import { SubscriptionModal } from "./SubscriptionModal";
+import { logError } from "@/lib/logger";
 import {
   Crown,
   Heart,
@@ -57,7 +58,7 @@ export function SubscriptionCard({
           setSubscriptionData(activeSubscription);
         }
       } catch (err) {
-        console.error("Error checking subscription:", err);
+        logError("Error checking subscription", err as Error);
       } finally {
         setLoadingSubscription(false);
       }

@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { stripeService } from "../services/stripeService";
 import { supabase } from "../lib/supabase"; // TEMPORARY STUB during migration
 import { prisma } from "../lib/prisma";
+import { loggers } from "@server/lib/logger";
 
 const creators = Router();
 
@@ -72,7 +73,7 @@ creators.post("/onboard", async (req: Request, res: Response) => {
       stripe_account_id: account.id,
     });
   } catch (error) {
-    console.error("Error starting onboarding:", error);
+    loggers.payment.error("Error starting onboarding:", error);
     res.status(500).json({ error: "Failed to start onboarding process" });
   }
 });
@@ -126,7 +127,7 @@ creators.get(
         can_receive_payouts: accountStatus.payouts_enabled,
       });
     } catch (error) {
-      console.error("Error checking onboarding status:", error);
+      loggers.payment.error("Error checking onboarding status:", error);
       res.status(500).json({ error: "Failed to check onboarding status" });
     }
   },
@@ -216,7 +217,7 @@ creators.get("/dashboard/:creatorId", async (req: Request, res: Response) => {
           creator.stripe_account_id,
         );
       } catch (error) {
-        console.error("Error fetching Stripe balance:", error);
+        loggers.payment.error("Error fetching Stripe balance:", error);
       }
     }
 
@@ -247,7 +248,7 @@ creators.get("/dashboard/:creatorId", async (req: Request, res: Response) => {
       earnings_data: earnings || [],
     });
   } catch (error) {
-    console.error("Error fetching creator dashboard:", error);
+    loggers.payment.error("Error fetching creator dashboard:", error);
     res.status(500).json({ error: "Failed to fetch dashboard data" });
   }
 });
@@ -322,7 +323,7 @@ creators.post("/payout", async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Error creating payout:", error);
+    loggers.payment.error("Error creating payout:", error);
     res.status(500).json({ error: "Failed to initiate payout" });
   }
 });
@@ -357,7 +358,7 @@ creators.put("/subscription-price", async (req: Request, res: Response) => {
       price: price / 100, // Return in dollars
     });
   } catch (error) {
-    console.error("Error updating subscription price:", error);
+    loggers.payment.error("Error updating subscription price:", error);
     res.status(500).json({ error: "Failed to update subscription price" });
   }
 });
@@ -399,7 +400,7 @@ creators.get("/earnings/:creatorId", async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching earnings history:", error);
+    loggers.payment.error("Error fetching earnings history:", error);
     res.status(500).json({ error: "Failed to fetch earnings history" });
   }
 });
@@ -440,7 +441,7 @@ creators.get("/payouts/:creatorId", async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching payout history:", error);
+    loggers.payment.error("Error fetching payout history:", error);
     res.status(500).json({ error: "Failed to fetch payout history" });
   }
 });

@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
+import logger from "@server/lib/logger";
 
 const STORAGE_DIR = process.env.STORAGE_DIR || path.join(process.cwd(), "uploads");
 const BASE_URL = process.env.SERVER_URL || "http://localhost:3000";
@@ -65,7 +66,7 @@ export class FileStorage {
     try {
       await fs.unlink(filePath);
     } catch (error) {
-      console.error("Failed to delete file:", error);
+      logger.error("Failed to delete file:", error);
     }
   }
 

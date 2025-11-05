@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { supabase } from "../lib/supabase"; // TEMPORARY STUB during migration
+import { loggers } from "@server/lib/logger";
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-08-27.basil",
@@ -48,7 +49,7 @@ export class StripeService {
 
       return account;
     } catch (error) {
-      console.error("Error creating Connect account:", error);
+      loggers.payment.error("Error creating Connect account:", error);
       throw error;
     }
   }
@@ -64,7 +65,7 @@ export class StripeService {
 
       return accountLink.url;
     } catch (error) {
-      console.error("Error creating onboarding link:", error);
+      loggers.payment.error("Error creating onboarding link:", error);
       throw error;
     }
   }
@@ -87,7 +88,7 @@ export class StripeService {
         requirements: account.requirements,
       };
     } catch (error) {
-      console.error("Error checking account status:", error);
+      loggers.payment.error("Error checking account status:", error);
       throw error;
     }
   }
@@ -111,7 +112,7 @@ export class StripeService {
 
       return customer;
     } catch (error) {
-      console.error("Error creating customer:", error);
+      loggers.payment.error("Error creating customer:", error);
       throw error;
     }
   }
@@ -159,7 +160,7 @@ export class StripeService {
 
       return subscription;
     } catch (error) {
-      console.error("Error creating subscription:", error);
+      loggers.payment.error("Error creating subscription:", error);
       throw error;
     }
   }
@@ -185,7 +186,7 @@ export class StripeService {
 
       return price;
     } catch (error) {
-      console.error("Error creating price:", error);
+      loggers.payment.error("Error creating price:", error);
       throw error;
     }
   }
@@ -235,7 +236,7 @@ export class StripeService {
 
       return paymentIntent;
     } catch (error) {
-      console.error("Error processing tip:", error);
+      loggers.payment.error("Error processing tip:", error);
       throw error;
     }
   }
@@ -258,7 +259,7 @@ export class StripeService {
 
       return payout;
     } catch (error) {
-      console.error("Error creating payout:", error);
+      loggers.payment.error("Error creating payout:", error);
       throw error;
     }
   }
@@ -279,7 +280,7 @@ export class StripeService {
         total_pending: balance.pending.reduce((sum, b) => sum + b.amount, 0),
       };
     } catch (error) {
-      console.error("Error getting balance:", error);
+      loggers.payment.error("Error getting balance:", error);
       throw error;
     }
   }
@@ -318,7 +319,7 @@ export class StripeService {
         charges: charges.data,
       };
     } catch (error) {
-      console.error("Error getting creator earnings:", error);
+      loggers.payment.error("Error getting creator earnings:", error);
       throw error;
     }
   }
@@ -343,7 +344,7 @@ export class StripeService {
         fees: applicationFees.data,
       };
     } catch (error) {
-      console.error("Error getting platform revenue:", error);
+      loggers.payment.error("Error getting platform revenue:", error);
       throw error;
     }
   }
@@ -377,10 +378,10 @@ export class StripeService {
           break;
 
         default:
-          console.log(`Unhandled event type: ${event.type}`);
+          loggers.payment.info(`Unhandled event type: ${event.type}`);
       }
     } catch (error) {
-      console.error("Error processing webhook event:", error);
+      loggers.payment.error("Error processing webhook event:", error);
       throw error;
     }
   }

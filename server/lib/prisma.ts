@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { loggers } from "@server/lib/logger";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
@@ -20,7 +21,7 @@ export async function disconnectPrisma() {
 
 // Helper function to handle database errors
 export function handlePrismaError(error: any) {
-  console.error("Database error:", error);
+  loggers.database.error("Database error:", error);
 
   // Prisma-specific error handling
   if (error.code === "P2002") {

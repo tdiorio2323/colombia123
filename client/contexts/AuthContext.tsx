@@ -6,6 +6,7 @@ import {
   ReactNode,
 } from "react";
 import { Profile, UserRole, User } from "@shared/api";
+import { logError } from "@/lib/logger";
 
 type Session = {
   user: User;
@@ -183,7 +184,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       setProfile(response.data);
     } catch (error) {
-      console.error('Failed to update profile:', error);
+      logError('Failed to update profile', error as Error);
       throw error;
     }
   };

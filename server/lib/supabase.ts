@@ -1,5 +1,6 @@
 // TEMPORARY STUB - Auth disabled during Prisma migration
 // This file exists only to prevent build errors during migration
+import logger from "@server/lib/logger";
 
 // Create a comprehensive stub that matches Supabase API structure
 const createStubQuery = (): any => ({
@@ -54,4 +55,4 @@ export const supabase = {
   }
 };
 
-console.warn("WARNING: Using Supabase stub - database functionality disabled during Prisma migration");
+logger.warn("WARNING: Using Supabase stub - database functionality disabled during Prisma migration");

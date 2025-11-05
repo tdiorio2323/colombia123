@@ -2,6 +2,7 @@ import { Router } from "express";
 import { supabase } from "../lib/supabase"; // TEMPORARY STUB during migration
 import { Request, Response } from "express";
 import { stripeService } from "../services/stripeService";
+import { loggers } from "@server/lib/logger";
 import {
   validateSubscriptionRequest,
   validateTipRequest,
@@ -120,7 +121,7 @@ subscriptions.post(
         },
       });
     } catch (error) {
-      console.error("Error creating subscription:", error);
+      loggers.payment.error("Error creating subscription:", error);
       res.status(500).json({ error: "Failed to create subscription" });
     }
   },
@@ -179,7 +180,7 @@ subscriptions.post("/cancel", async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Error cancelling subscription:", error);
+    loggers.payment.error("Error cancelling subscription:", error);
     res.status(500).json({ error: "Failed to cancel subscription" });
   }
 });
@@ -234,7 +235,7 @@ subscriptions.post("/reactivate", async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error("Error reactivating subscription:", error);
+    loggers.payment.error("Error reactivating subscription:", error);
     res.status(500).json({ error: "Failed to reactivate subscription" });
   }
 });
@@ -267,7 +268,7 @@ subscriptions.get("/user/:userId", async (req: Request, res: Response) => {
 
     res.json({ subscriptions });
   } catch (error) {
-    console.error("Error fetching user subscriptions:", error);
+    loggers.payment.error("Error fetching user subscriptions:", error);
     res.status(500).json({ error: "Failed to fetch subscriptions" });
   }
 });
@@ -321,7 +322,7 @@ subscriptions.get(
         },
       });
     } catch (error) {
-      console.error("Error fetching creator subscribers:", error);
+      loggers.payment.error("Error fetching creator subscribers:", error);
       res.status(500).json({ error: "Failed to fetch subscribers" });
     }
   },
@@ -352,7 +353,7 @@ subscriptions.put("/price", async (req: Request, res: Response) => {
       newPrice: newPrice / 100,
     });
   } catch (error) {
-    console.error("Error updating subscription price:", error);
+    loggers.payment.error("Error updating subscription price:", error);
     res.status(500).json({ error: "Failed to update subscription price" });
   }
 });
@@ -425,7 +426,7 @@ subscriptions.post(
         },
       });
     } catch (error) {
-      console.error("Error processing tip:", error);
+      loggers.payment.error("Error processing tip:", error);
       res.status(500).json({ error: "Failed to process tip" });
     }
   },
@@ -495,7 +496,7 @@ subscriptions.get(
         },
       });
     } catch (error) {
-      console.error("Error fetching subscription analytics:", error);
+      loggers.payment.error("Error fetching subscription analytics:", error);
       res.status(500).json({ error: "Failed to fetch analytics" });
     }
   },
@@ -547,7 +548,7 @@ subscriptions.post(
         customer_id: customerId,
       });
     } catch (error) {
-      console.error("Error creating setup intent:", error);
+      loggers.payment.error("Error creating setup intent:", error);
       res.status(500).json({ error: "Failed to create setup intent" });
     }
   },

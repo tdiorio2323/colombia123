@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ShoppingCart, Star, Filter, Search, Heart } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
+import { logInfo } from '@/lib/logger';
 
 // Define a type for our product for better type safety
 type Product = {
@@ -121,7 +122,7 @@ export default function Shop() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar className="sticky glass-nav py-4">
-        <Button className="btn-gold relative" onClick={() => console.log('Cart clicked')}>
+        <Button className="btn-gold relative" onClick={() => logInfo('Cart button clicked')}>
           <ShoppingCart className="h-5 w-5 mr-2" />
           Cart
           {cart.length > 0 && (
@@ -308,7 +309,7 @@ export default function Shop() {
                     ${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)} total
                   </div>
                 </div>
-                <Button className="btn-gold" onClick={() => console.log('Checkout clicked')}>
+                <Button className="btn-gold" onClick={() => logInfo('Checkout button clicked')}>
                   Checkout
                 </Button>
               </div>

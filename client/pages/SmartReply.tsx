@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SmartReplyRequest, SmartReplyResponse } from "@shared/api";
+import { logError } from "@/lib/logger";
 
 export default function SmartReply() {
   const [prompt, setPrompt] = useState("");
@@ -32,7 +33,7 @@ export default function SmartReply() {
       const data: SmartReplyResponse = await response.json();
       setReply(data.reply);
     } catch (error) {
-      console.error(error);
+      logError("Failed to generate smart reply", error as Error);
       setReply("Error: Could not generate a reply.");
     } finally {
       setIsLoading(false);

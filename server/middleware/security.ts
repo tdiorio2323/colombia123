@@ -184,23 +184,21 @@ export const requestLogger = (
     const duration = Date.now() - start;
     const { statusCode } = res;
 
-    // Log to console (in production, use a proper logger like Winston)
-    console.log(
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        method,
-        url,
-        statusCode,
-        duration: `${duration}ms`,
-        ip,
-        userAgent: req.get("User-Agent"),
-        // Only log sensitive info in development
-        ...(process.env.NODE_ENV === "development" && {
-          headers: req.headers,
-          body: req.body,
-        }),
+    // Log using the logger instead of console
+    loggers.app.info("HTTP Request", {
+      timestamp: new Date().toISOString(),
+      method,
+      url,
+      statusCode,
+      duration: `${duration}ms`,
+      ip,
+      userAgent: req.get("User-Agent"),
+      // Only log sensitive info in development
+      ...(process.env.NODE_ENV === "development" && {
+        headers: req.headers,
+        body: req.body,
       }),
-    );
+    });
   });
 
   next();

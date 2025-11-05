@@ -1,9 +1,0 @@
-node_modules
-npm-debug.log*
-dist
-build
-.vite
-.env
-.env.*
-apps/**/.env
-apps/**/.env.*

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { prisma } from "../lib/prisma";
+import { loggers } from "@server/lib/logger";
 
 const r = Router();
 
@@ -24,7 +25,7 @@ r.get("/health", async (_req, res) => {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Database health check failed:", error);
+    loggers.database.error("Database health check failed:", error);
     res.status(500).json({
       ok: false,
       error: "Database connection failed",
@@ -62,7 +63,7 @@ r.get("/stats", async (_req, res) => {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Database stats query failed:", error);
+    loggers.database.error("Database stats query failed:", error);
     res.status(500).json({
       ok: false,
       error: "Failed to fetch database statistics",

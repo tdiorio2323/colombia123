@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { SmartReplyRequest, SmartReplyResponse } from "@shared/api";
 import axios from "axios";
+import { loggers } from "@server/lib/logger";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
@@ -44,7 +45,7 @@ export const handleSmartReply: RequestHandler = async (req, res) => {
 
     res.json(smartReplyResponse);
   } catch (error) {
-    console.error("Error calling Gemini API:", error);
+    loggers.api.error("Error calling Gemini API:", error);
     res.status(500).json({ error: "Failed to generate smart reply" });
   }
 };
