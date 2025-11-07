@@ -3,26 +3,24 @@ import { Instagram, Twitter, Facebook, Mail, Crown } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="py-16 relative border-t border-gray-800">
-      <div className="absolute inset-0 bg-black"></div>
-
+    <footer className="py-16 relative border-t border-white/10">
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-accent to-yellow-600 rounded-lg flex items-center justify-center">
-                <Crown className="h-5 w-5 text-black" />
+              <div className="w-10 h-10 bg-gradient-to-br from-luxury-gold to-luxury-gold-light rounded-xl flex items-center justify-center">
+                <Crown className="h-5 w-5 text-luxury-black" />
               </div>
               <div>
-                <span className="text-xl font-display font-bold text-accent">
-                  Colombia123
+                <span className="text-xl font-light text-luxury-gold tracking-tight">
+                  Havana
                 </span>
-                <div className="text-xs text-gray-500">Creator Platform</div>
+                <div className="text-xs text-white/40 uppercase tracking-wider">Creator Platform</div>
               </div>
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              Colombia's premier content creator monetization platform.
+            <p className="text-white/60 text-sm font-light leading-relaxed">
+              Premium content creator monetization platform.
               Empowering creators to build sustainable businesses.
             </p>
             <div className="flex gap-4">
@@ -30,7 +28,7 @@ export default function Footer() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-accent transition-colors"
+                className="w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:border-luxury-gold/50 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-luxury-gold transition-all"
               >
                 <Instagram className="h-5 w-5" />
               </a>
@@ -38,7 +36,7 @@ export default function Footer() {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-accent transition-colors"
+                className="w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:border-luxury-gold/50 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-luxury-gold transition-all"
               >
                 <Twitter className="h-5 w-5" />
               </a>
@@ -46,7 +44,7 @@ export default function Footer() {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-accent transition-colors"
+                className="w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:border-luxury-gold/50 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-luxury-gold transition-all"
               >
                 <Facebook className="h-5 w-5" />
               </a>
@@ -55,37 +53,25 @@ export default function Footer() {
 
           {/* Platform */}
           <div>
-            <h3 className="font-display font-bold text-white mb-4">Platform</h3>
+            <h3 className="font-light text-white mb-4 tracking-tight">Platform</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link
-                  to="/services"
-                  className="text-gray-400 hover:text-accent transition-colors"
-                >
+                <Link to="/services" className="text-white/60 hover:text-luxury-gold transition-colors font-light">
                   For Creators
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/community"
-                  className="text-gray-400 hover:text-accent transition-colors"
-                >
+                <Link to="/community" className="text-white/60 hover:text-luxury-gold transition-colors font-light">
                   Community
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/shop"
-                  className="text-gray-400 hover:text-accent transition-colors"
-                >
+                <Link to="/shop" className="text-white/60 hover:text-luxury-gold transition-colors font-light">
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/calendar"
-                  className="text-gray-400 hover:text-accent transition-colors"
-                >
+                <Link to="/calendar" className="text-white/60 hover:text-luxury-gold transition-colors font-light">
                   Resources
                 </Link>
               </li>
@@ -94,37 +80,25 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="font-display font-bold text-white mb-4">Company</h3>
+            <h3 className="font-light text-white mb-4 tracking-tight">Company</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link
-                  to="/about"
-                  className="text-gray-400 hover:text-accent transition-colors"
-                >
+                <Link to="/about" className="text-white/60 hover:text-luxury-gold transition-colors font-light">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/contact"
-                  className="text-gray-400 hover:text-accent transition-colors"
-                >
+                <Link to="/contact" className="text-white/60 hover:text-luxury-gold transition-colors font-light">
                   Contact
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/careers"
-                  className="text-gray-400 hover:text-accent transition-colors"
-                >
+                <Link to="/careers" className="text-white/60 hover:text-luxury-gold transition-colors font-light">
                   Careers
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/blog"
-                  className="text-gray-400 hover:text-accent transition-colors"
-                >
+                <Link to="/blog" className="text-white/60 hover:text-luxury-gold transition-colors font-light">
                   Blog
                 </Link>
               </li>
@@ -133,37 +107,25 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="font-display font-bold text-white mb-4">Legal</h3>
+            <h3 className="font-light text-white mb-4 tracking-tight">Legal</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link
-                  to="/terms"
-                  className="text-gray-400 hover:text-accent transition-colors"
-                >
+                <Link to="/terms" className="text-white/60 hover:text-luxury-gold transition-colors font-light">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/privacy"
-                  className="text-gray-400 hover:text-accent transition-colors"
-                >
+                <Link to="/privacy" className="text-white/60 hover:text-luxury-gold transition-colors font-light">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/guidelines"
-                  className="text-gray-400 hover:text-accent transition-colors"
-                >
+                <Link to="/guidelines" className="text-white/60 hover:text-luxury-gold transition-colors font-light">
                   Community Guidelines
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/cookies"
-                  className="text-gray-400 hover:text-accent transition-colors"
-                >
+                <Link to="/cookies" className="text-white/60 hover:text-luxury-gold transition-colors font-light">
                   Cookie Policy
                 </Link>
               </li>
@@ -172,19 +134,18 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-gray-800 pt-8">
+        <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-500 text-sm">
-              &copy; {new Date().getFullYear()} Colombia123. All rights reserved.
-              Made with 💛 in Colombia 🇨🇴
+            <p className="text-white/40 text-sm font-light">
+              &copy; {new Date().getFullYear()} Havana. All rights reserved.
             </p>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <div className="flex items-center gap-2 text-sm text-white/40">
               <Mail className="h-4 w-4" />
               <a
-                href="mailto:support@colombia123.com"
-                className="hover:text-accent transition-colors"
+                href="mailto:support@havana.com"
+                className="hover:text-luxury-gold transition-colors font-light"
               >
-                support@colombia123.com
+                support@havana.com
               </a>
             </div>
           </div>
