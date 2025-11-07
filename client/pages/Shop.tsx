@@ -1,11 +1,7 @@
-import { useState, useMemo } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ShoppingCart, Star, Filter, Search, Heart } from 'lucide-react';
-import { Navbar } from '@/components/Navbar';
+import { useState } from "react";
+import { GlassCard, LuxuryButton } from "@/components/ui/luxury";
+import { ShoppingCart, Star, Heart, Sparkles } from "lucide-react";
 
-// Define a type for our product for better type safety
 type Product = {
   id: number;
   name: string;
@@ -13,309 +9,124 @@ type Product = {
   originalPrice?: number;
   image: string;
   category: string;
-  stock: string;
   description: string;
   rating: number;
-  reviews: number;
 };
 
 export default function Shop() {
   const [cart, setCart] = useState<Product[]>([]);
-  const [filter, setFilter] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
 
   const products: Product[] = [
-    {
-      id: 1,
-      name: 'Signed Debut Album',
-      price: 79.99,
-      originalPrice: 99.99,
-      image: '/placeholder.svg',
-      category: 'music',
-      stock: 'Limited Edition',
-      description: 'Hand-signed debut album with exclusive photo insert',
-      rating: 5,
-      reviews: 127,
-    },
-    {
-      id: 2,
-      name: 'Official Tour T-Shirt',
-      price: 34.99,
-      image: '/placeholder.svg',
-      category: 'apparel',
-      stock: 'In Stock',
-      description: 'Premium cotton tour merchandise in black and gold',
-      rating: 4.8,
-      reviews: 89,
-    },
-    {
-      id: 3,
-      name: 'VIP Concert Pass',
-      price: 299.99,
-      image: '/placeholder.svg',
-      category: 'experiences',
-      stock: 'Few Left',
-      description: 'Backstage access, meet & greet, and premium seating',
-      rating: 5,
-      reviews: 34,
-    },
-    {
-      id: 4,
-      name: 'Exclusive Photo Bundle',
-      price: 24.99,
-      image: '/placeholder.svg',
-      category: 'digital',
-      stock: 'Digital',
-      description: 'High-res photo collection from recent shoots',
-      rating: 4.9,
-      reviews: 156,
-    },
-    {
-      id: 5,
-      name: 'Gold Crown Necklace',
-      price: 149.99,
-      image: '/placeholder.svg',
-      category: 'jewelry',
-      stock: 'Limited',
-      description: '18k gold-plated crown pendant, Eimy\'s signature piece',
-      rating: 4.7,
-      reviews: 43,
-    },
-    {
-      id: 6,
-      name: 'Vintage Poster Set',
-      price: 19.99,
-      image: '/placeholder.svg',
-      category: 'collectibles',
-      stock: 'In Stock',
-      description: 'Set of 3 vintage-style concert posters',
-      rating: 4.6,
-      reviews: 78,
-    },
+    { id: 1, name: "Signed Debut Album", price: 79.99, originalPrice: 99.99, image: "https://images.unsplash.com/photo-1619983081563-430f63602796", category: "music", description: "Hand-signed debut album with exclusive photo insert", rating: 5 },
+    { id: 2, name: "Official Tour T-Shirt", price: 34.99, image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab", category: "apparel", description: "Premium cotton tour merchandise", rating: 4.8 },
+    { id: 3, name: "Exclusive Photo Book", price: 59.99, image: "https://images.unsplash.com/photo-1512820790803-83ca734da794", category: "books", description: "Limited edition hardcover photo book", rating: 4.9 },
+    { id: 4, name: "VIP Concert Poster", price: 24.99, image: "https://images.unsplash.com/photo-1611162616475-46b635cb6868", category: "art", description: "Collectible concert poster", rating: 4.7 },
   ];
 
-  // useMemo will prevent recalculating categories on every render
-  const categories = useMemo(() => {
-    const categoryCounts = products.reduce((acc, product) => {
-      acc[product.category] = (acc[product.category] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>); // Fix: Added missing comma here
-    
-    const allCategories = [
-      { id: 'all', name: 'All Items', count: products.length },
-      ...Object.keys(categoryCounts).map(cat => ({ id: cat, name: cat.charAt(0).toUpperCase() + cat.slice(1), count: categoryCounts[cat] }))
-    ];
-    return allCategories;
-  }, [products]);
-
-  const filteredProducts = useMemo(() => {
-    return products
-      .filter(p => filter === 'all' || p.category === filter)
-      .filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-  }, [products, filter, searchTerm]);
-
   const addToCart = (product: Product) => {
-    setCart(prev => [...prev, product]);
+    setCart([...cart, product]);
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar className="sticky glass-nav py-4">
-        <Button className="btn-gold relative" onClick={() => console.log('Cart clicked')}>
-          <ShoppingCart className="h-5 w-5 mr-2" />
-          Cart
-          {cart.length > 0 && (
-            <Badge className="absolute -top-2 -right-2 bg-primary text-primary-foreground min-w-[20px] h-5 rounded-full text-xs">
-              {cart.length}
-            </Badge>
-          )}
-        </Button>
-      </Navbar>
+    <div className="min-h-screen relative overflow-hidden">
+      <div className="absolute inset-0 bg-luxury-black"></div>
+      <div className="absolute inset-0 bg-luxury-gradient"></div>
+      <div className="absolute inset-0 bg-luxury-noise"></div>
 
-      {/* Hero */}
-      <section className="py-16 bg-gradient-to-br from-cream via-background to-gold/10">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl lg:text-6xl font-display font-bold mb-6">
-            Official <span className="text-gradient">Merchandise</span>
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Limited edition items and exclusive merchandise crafted with love for true fans
-          </p>
-        </div>
-      </section>
+      <div className="absolute top-20 right-20 w-96 h-96 bg-luxury-gold/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-40 left-20 w-80 h-80 bg-luxury-gold/3 rounded-full blur-3xl"></div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-4 gap-8">
-          {/* Sidebar Filters */}
-          <div className="lg:col-span-1">
-            <Card className="sticky top-24">
-              <CardContent className="p-6">
-                <div className="space-y-6">
-                  {/* Search */}
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Search</label>
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <input 
-                        type="text"
-                        placeholder="Search products..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-input rounded-md focus:ring-2 focus:ring-gold focus:border-transparent"
-                      />
+      <div className="relative z-10 container mx-auto px-6 py-24">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16 animate-luxury-fade-in">
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <div className="px-4 py-2 rounded-full border border-luxury-gold/30 bg-luxury-gold/10">
+                <div className="flex items-center gap-2">
+                  <ShoppingCart className="w-4 h-4 text-luxury-gold" />
+                  <span className="text-xs uppercase tracking-widest text-luxury-gold font-semibold">
+                    Exclusive Merchandise
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <h1 className="text-6xl md:text-7xl font-extralight text-white mb-6 tracking-tight">
+              Luxury <span className="text-luxury-gold">Shop</span>
+            </h1>
+            <p className="text-white/60 text-lg font-light max-w-2xl mx-auto">
+              Exclusive merchandise and collectibles for true fans
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {products.map((product, index) => (
+              <GlassCard key={product.id} className="luxury-hover-lift group" style={{ animationDelay: `${index * 100}ms` }}>
+                <div className="relative mb-6 rounded-2xl overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-48 object-cover transition-transform group-hover:scale-110"
+                  />
+                  {product.originalPrice && (
+                    <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-luxury-gold border border-luxury-gold/30">
+                      <span className="text-xs font-bold text-luxury-black uppercase">Sale</span>
                     </div>
+                  )}
+                  <button className="absolute top-3 left-3 w-10 h-10 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all">
+                    <Heart className="w-5 h-5 text-white" />
+                  </button>
+                </div>
+
+                <div className="mb-4">
+                  <div className="flex items-center gap-1 mb-2">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className={`w-4 h-4 ${i < Math.floor(product.rating) ? "text-luxury-gold fill-luxury-gold" : "text-white/20"}`} />
+                    ))}
+                    <span className="text-xs text-white/50 ml-2">{product.rating}</span>
                   </div>
+                  <h3 className="text-lg font-light text-white mb-2 tracking-tight">{product.name}</h3>
+                  <p className="text-sm text-white/60 font-light mb-4">{product.description}</p>
 
-                  {/* Categories */}
-                  <div>
-                    <h3 className="font-semibold text-gold mb-4 flex items-center">
-                      <Filter className="h-4 w-4 mr-2" />
-                      Categories
-                    </h3>
-                    <div className="space-y-2">
-                      {categories.map((category) => (
-                        <button
-                          key={category.id}
-                          onClick={() => setFilter(category.id)}
-                          className={`w-full text-left px-3 py-2 rounded-md transition-colors flex items-center justify-between ${
-                            filter === category.id 
-                              ? 'bg-gold text-gold-foreground' 
-                              : 'hover:bg-cream'
-                          }`}
-                        >
-                          <span>{category.name}</span>
-                          <Badge variant="secondary" className="text-xs">
-                            {category.count}
-                          </Badge>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Price Range */}
-                  <div>
-                    <h3 className="font-semibold text-gold mb-4">Price Range</h3>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <input type="number" placeholder="Min" className="w-full px-3 py-2 border border-input rounded-md text-sm" />
-                        <span>-</span>
-                        <input type="number" placeholder="Max" className="w-full px-3 py-2 border border-input rounded-md text-sm" />
-                      </div>
-                    </div>
+                  <div className="flex items-baseline gap-2 mb-4">
+                    <span className="text-2xl font-extralight text-luxury-gold">${product.price}</span>
+                    {product.originalPrice && (
+                      <span className="text-sm text-white/40 line-through">${product.originalPrice}</span>
+                    )}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+
+                <LuxuryButton
+                  variant="gold"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => addToCart(product)}
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Add to Cart
+                </LuxuryButton>
+              </GlassCard>
+            ))}
           </div>
 
-          {/* Products Grid */}
-          <div className="lg:col-span-3">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-2xl font-display font-bold">
-                  {filter === 'all' ? 'All Products' : categories.find(c => c.id === filter)?.name}
-                </h2>
-                <p className="text-muted-foreground">{filteredProducts.length} items found</p>
+          {cart.length > 0 && (
+            <GlassCard premium className="mt-12 p-8 max-w-md ml-auto">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-light text-white tracking-tight">Shopping Cart</h3>
+                <div className="w-8 h-8 rounded-full bg-luxury-gold flex items-center justify-center">
+                  <span className="text-sm font-bold text-luxury-black">{cart.length}</span>
+                </div>
               </div>
-              <select className="px-4 py-2 border border-input rounded-md focus:ring-2 focus:ring-gold focus:border-transparent">
-                <option>Sort by Featured</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Newest</option>
-                <option>Best Selling</option>
-              </select>
-            </div>
-
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <Card key={product.id} className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
-                  <div className="aspect-square relative overflow-hidden">
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute top-3 left-3 flex flex-col gap-2">
-                      <Badge className="bg-gold text-gold-foreground">
-                        {product.stock}
-                      </Badge>
-                      {product.originalPrice && (
-                        <Badge variant="destructive">
-                          Save ${(product.originalPrice - product.price).toFixed(2)}
-                        </Badge>
-                      )}
-                    </div>
-                    <button className="absolute top-3 right-3 bg-white/90 hover:bg-white p-2 rounded-full transition-colors">
-                      <Heart className="h-4 w-4" />
-                    </button>
-                  </div>
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      <div>
-                        <h3 className="font-semibold text-lg group-hover:text-gold transition-colors">
-                          {product.name}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">{product.description}</p>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <Star 
-                              key={i} 
-                              className={`h-4 w-4 ${i < Math.floor(product.rating) ? 'text-gold fill-current' : 'text-muted-foreground'}`} 
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm text-muted-foreground">({product.reviews})</span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-2xl font-bold text-gold">${product.price}</span>
-                          {product.originalPrice && (
-                            <span className="text-sm text-muted-foreground line-through">
-                              ${product.originalPrice}
-                            </span>
-                          )}
-                        </div>
-                        <Button 
-                          onClick={() => addToCart(product)}
-                          className="btn-primary"
-                        >
-                          <ShoppingCart className="h-4 w-4 mr-2" />
-                          Add
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
+              <div className="text-3xl font-extralight text-luxury-gold mb-6">
+                ${cart.reduce((sum, p) => sum + p.price, 0).toFixed(2)}
+              </div>
+              <LuxuryButton variant="gold" size="lg" className="w-full">
+                <Sparkles className="w-5 h-5 mr-2" />
+                Checkout
+              </LuxuryButton>
+            </GlassCard>
+          )}
         </div>
       </div>
-
-      {/* Checkout Mock */}
-      {cart.length > 0 && (
-        <div className="fixed bottom-6 right-6 z-50">
-          <Card className="shadow-2xl border-gold">
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-4">
-                <div className="text-sm">
-                  <div className="font-semibold">{cart.length} items in cart</div>
-                  <div className="text-muted-foreground">
-                    ${cart.reduce((sum, item) => sum + item.price, 0).toFixed(2)} total
-                  </div>
-                </div>
-                <Button className="btn-gold" onClick={() => console.log('Checkout clicked')}>
-                  Checkout
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
     </div>
   );
 }
