@@ -10,16 +10,18 @@ import {
   Zap,
   Gift,
   CheckCircle,
+  Sparkles,
 } from "lucide-react";
+import { GlassCard, LuxuryButton } from "@/components/ui/luxury";
 
-const FeatureCard = ({ icon, title, children }) => (
-  <div className="rounded-2xl bg-white/5 p-6 border border-white/10 transform hover:-translate-y-1 transition-transform duration-300">
-    <div className="flex items-center gap-3">
-      <div className="p-2 bg-yellow-300/10 rounded-lg">{icon}</div>
-      <h3 className="font-semibold text-lg">{title}</h3>
+const FeatureCard = ({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) => (
+  <GlassCard className="luxury-hover-lift">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="p-3 bg-luxury-gold/10 rounded-xl border border-luxury-gold/30">{icon}</div>
+      <h3 className="font-light text-xl text-white tracking-tight">{title}</h3>
     </div>
-    <p className="mt-2 text-sm text-neutral-300/80">{children}</p>
-  </div>
+    <p className="text-sm text-white/60 font-light leading-relaxed">{children}</p>
+  </GlassCard>
 );
 
 export default function ShowcasePage() {
@@ -27,7 +29,7 @@ export default function ShowcasePage() {
     {
       name: "Premium Fan",
       price: "$14.99",
-      icon: <Star size={18} className="opacity-80" />,
+      icon: <Star size={18} className="text-luxury-gold" />,
       features: [
         "Daily photos & videos",
         "Weekly live streams",
@@ -37,7 +39,7 @@ export default function ShowcasePage() {
     {
       name: "VIP Supporter",
       price: "$39.99",
-      icon: <Crown size={18} className="opacity-80" />,
+      icon: <Crown size={18} className="text-luxury-gold" />,
       features: [
         "Everything in Premium",
         "Private messaging",
@@ -47,309 +49,304 @@ export default function ShowcasePage() {
   ];
 
   return (
-    <main className="min-h-screen w-full text-neutral-100 relative overflow-hidden bg-black">
-      <div
-        className="absolute inset-0 -z-10"
-        style={{
-          backgroundImage: `url('https://i.imgur.com/nul7HiI.jpg')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      <div className="absolute inset-0 -z-10 bg-black/30" />
+    <main className="min-h-screen relative overflow-hidden">
+      {/* Luxury Background */}
+      <div className="absolute inset-0 bg-luxury-black"></div>
+      <div className="absolute inset-0 bg-luxury-gradient"></div>
+      <div className="absolute inset-0 bg-luxury-noise"></div>
 
-      {/* Hero Section */}
-      <section className="relative text-center py-24 md:py-32">
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(255,215,0,0.5)]">
-          Monetize Your Content, Connect with Your Fans
-        </h1>
-        <p className="mt-4 max-w-3xl mx-auto text-lg text-neutral-300/90">
-          The ultimate platform for Colombian creators to build a powerful,
-          independent business. We provide the tools, you provide the talent.
-        </p>
-        <div className="mt-8 flex justify-center gap-4">
-          <a
-            href="#features"
-            className="inline-flex items-center gap-2 rounded-xl bg-yellow-300 px-6 py-3 text-lg font-semibold text-neutral-900 shadow-lg shadow-yellow-500/30 transform hover:scale-105 transition-transform"
-          >
-            Explore Features
-          </a>
-          <button className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-lg backdrop-blur hover:bg-white/20 transition">
-            Join Now
-          </button>
-        </div>
-      </section>
+      {/* Decorative Elements */}
+      <div className="absolute top-20 right-20 w-96 h-96 bg-luxury-gold/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-[40%] left-20 w-80 h-80 bg-luxury-gold/3 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-40 right-40 w-96 h-96 bg-luxury-gold/4 rounded-full blur-3xl"></div>
 
-      {/* Features Section */}
-      <section id="features" className="py-16 md:py-24 bg-black/40">
-        <div className="mx-auto max-w-7xl px-4">
-          <h2 className="text-3xl font-semibold tracking-tight text-center">
-            All The Tools You Need To Succeed
-          </h2>
-          <p className="mt-2 text-neutral-300/80 text-center max-w-xl mx-auto">
-            From subscriptions to direct messages, we've got you covered.
-          </p>
+      <div className="relative z-10">
+        {/* Hero Section */}
+        <section className="container mx-auto px-6 py-32 text-center">
+          <div className="animate-luxury-fade-in">
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <div className="px-4 py-2 rounded-full border border-luxury-gold/30 bg-luxury-gold/10">
+                <span className="text-xs uppercase tracking-widest text-luxury-gold font-semibold">
+                  Platform Showcase
+                </span>
+              </div>
+            </div>
 
-          {/* Subscription Tiers Demo */}
-          <div className="mt-12 grid md:grid-cols-2 gap-8 items-center">
-            <div className="md:pr-8">
+            <h1 className="text-6xl md:text-7xl font-extralight text-white mb-6 tracking-tight leading-tight max-w-5xl mx-auto">
+              Monetize Your Content, <br />
+              <span className="text-luxury-gold font-light">Connect with Your Fans</span>
+            </h1>
+
+            <p className="mt-6 max-w-3xl mx-auto text-xl text-white/60 font-light leading-relaxed">
+              The ultimate platform for creators to build a powerful, independent business.
+              We provide the tools, you provide the talent.
+            </p>
+
+            <div className="mt-10 flex justify-center gap-4 flex-wrap">
+              <LuxuryButton variant="gold" size="lg">
+                <Sparkles className="w-5 h-5 mr-2" />
+                Explore Features
+              </LuxuryButton>
+              <LuxuryButton variant="ghost" size="lg">
+                Join Now
+              </LuxuryButton>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section id="features" className="py-24 relative">
+          <div className="absolute inset-0 bg-white/[0.02]"></div>
+          <div className="relative container mx-auto px-6 max-w-7xl">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-extralight text-white mb-4 tracking-tight">
+                All The Tools You <span className="text-luxury-gold">Need To Succeed</span>
+              </h2>
+              <p className="text-white/60 text-lg font-light max-w-2xl mx-auto">
+                From subscriptions to direct messages, we've got you covered.
+              </p>
+            </div>
+
+            {/* Subscription Tiers Demo */}
+            <div className="mt-16 grid md:grid-cols-2 gap-12 items-center">
+              <div className="animate-luxury-fade-in">
+                <FeatureCard
+                  icon={<Star className="text-luxury-gold" size={24} />}
+                  title="Flexible Subscription Tiers"
+                >
+                  Create multiple tiers of monthly subscriptions to offer exclusive content and perks.
+                  You set the price, you set the benefits. Attract casual fans and high-value supporters alike.
+                </FeatureCard>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6 animate-luxury-fade-in" style={{ animationDelay: "100ms" }}>
+                {plans.map((plan, i) => (
+                  <GlassCard key={i} className="text-center p-6" premium={i === 1}>
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                      {plan.icon}
+                      <h3 className="font-light text-sm text-white uppercase tracking-wider">{plan.name}</h3>
+                    </div>
+                    <div className="text-3xl font-extralight text-luxury-gold mb-1">
+                      {plan.price}
+                    </div>
+                    <span className="text-xs text-white/40 uppercase tracking-wider">/month</span>
+
+                    <ul className="mt-6 space-y-2 text-xs text-left">
+                      {plan.features.map((f, idx) => (
+                        <li key={idx} className="flex items-center gap-2 text-white/70">
+                          <BadgeCheck size={14} className="text-luxury-gold flex-shrink-0" />
+                          <span>{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <LuxuryButton variant="gold" size="sm" className="w-full mt-6">
+                      Subscribe
+                    </LuxuryButton>
+                  </GlassCard>
+                ))}
+              </div>
+            </div>
+
+            {/* PPV Content Demo */}
+            <div className="mt-24 grid md:grid-cols-2 gap-12 items-center">
+              <div className="grid grid-cols-2 gap-6 animate-luxury-fade-in">
+                {[
+                  { title: "Exclusive Video", price: "$19.99" },
+                  { title: "Behind The Scenes", price: "$9.99" }
+                ].map((item, i) => (
+                  <GlassCard key={i} className="relative h-56 flex flex-col items-center justify-center text-center">
+                    <div className="absolute inset-0 bg-luxury-black/40 rounded-3xl"></div>
+                    <div className="relative z-10 flex flex-col items-center">
+                      <Lock size={36} className="text-luxury-gold/60 mb-4" />
+                      <p className="text-sm text-white/80 font-light mb-4">{item.title}</p>
+                      <LuxuryButton variant="gold" size="sm">
+                        Unlock {item.price}
+                      </LuxuryButton>
+                    </div>
+                  </GlassCard>
+                ))}
+              </div>
+
+              <div className="animate-luxury-fade-in md:order-first" style={{ animationDelay: "100ms" }}>
+                <FeatureCard
+                  icon={<Lock className="text-luxury-gold" size={24} />}
+                  title="Pay-Per-View (PPV) Content"
+                >
+                  Sell individual photo sets, videos, or other digital content for a one-time fee.
+                  Perfect for exclusive drops and maximizing revenue from your most sought-after content.
+                </FeatureCard>
+              </div>
+            </div>
+
+            {/* Additional Features */}
+            <div className="mt-24 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               <FeatureCard
-                icon={<Star className="text-yellow-300" />}
-                title="Flexible Subscription Tiers"
+                icon={<Heart className="text-luxury-gold" size={24} />}
+                title="Direct Messaging & Tips"
               >
-                Create multiple tiers of monthly subscriptions to offer
-                exclusive content and perks. You set the price, you set the
-                benefits. Attract casual fans and high-value supporters alike.
+                Engage directly with your fans through private messages. Fans can also send you tips to show their support.
+              </FeatureCard>
+              <FeatureCard
+                icon={<Zap className="text-luxury-gold" size={24} />}
+                title="Exclusive Live Streaming"
+              >
+                Host exclusive live streams for your subscribers. Engage with your audience in real-time and offer unique experiences.
+              </FeatureCard>
+              <FeatureCard
+                icon={<Gift className="text-luxury-gold" size={24} />}
+                title="Wishlist & Gifting"
+              >
+                Allow fans to buy you gifts directly from your wishlist. A fun and personal way for fans to support you.
               </FeatureCard>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              {plans.map((plan, i) => (
-                <div
-                  key={i}
-                  className="rounded-2xl bg-white/10 border border-white/20 p-4 backdrop-blur text-center"
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    {plan.icon}
-                    <h3 className="font-semibold text-sm">{plan.name}</h3>
+          </div>
+        </section>
+
+        {/* Why Us Section */}
+        <section className="py-24 container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-extralight text-white mb-4 tracking-tight">
+              Why Choose <span className="text-luxury-gold">Havana?</span>
+            </h2>
+            <p className="text-white/60 text-lg font-light max-w-2xl mx-auto">
+              Built for creators, by creators. We understand what you need to succeed.
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                title: "Highest Commission Rate",
+                description: "Keep 90% of your earnings. No hidden fees, no surprises. We only make money when you do."
+              },
+              {
+                title: "Fast & Secure Payouts",
+                description: "Get paid out weekly directly to your bank account. Your financial security is our priority."
+              },
+              {
+                title: "You Own Your Content",
+                description: "You have 100% ownership of your content and your audience. We never lock you in."
+              }
+            ].map((item, i) => (
+              <GlassCard key={i} className="text-center luxury-hover-lift" style={{ animationDelay: `${i * 100}ms` }}>
+                <div className="flex justify-center mb-6">
+                  <div className="w-16 h-16 rounded-full bg-luxury-gold/10 border border-luxury-gold/30 flex items-center justify-center">
+                    <CheckCircle className="text-luxury-gold" size={32} />
                   </div>
-                  <div className="mt-2 text-xl font-bold">
-                    {plan.price}
-                    <span className="text-xs text-neutral-400 font-normal">
-                      /mo
-                    </span>
-                  </div>
-                  <ul className="mt-3 space-y-1 text-xs text-left">
-                    {plan.features.map((f, idx) => (
-                      <li key={idx} className="flex items-center gap-1.5">
-                        <BadgeCheck size={12} className="text-yellow-300" /> {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <button className="mt-4 w-full rounded-lg bg-yellow-300/80 text-neutral-900 py-1.5 text-xs font-semibold">
-                    Subscribe
-                  </button>
                 </div>
+                <h3 className="font-light text-xl text-white mb-3 tracking-tight">{item.title}</h3>
+                <p className="text-sm text-white/60 font-light leading-relaxed">{item.description}</p>
+              </GlassCard>
+            ))}
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className="py-24 relative">
+          <div className="absolute inset-0 bg-white/[0.02]"></div>
+          <div className="relative container mx-auto px-6 max-w-5xl">
+            <h2 className="text-4xl font-extralight text-white mb-12 tracking-tight text-center">
+              Loved by <span className="text-luxury-gold">Creators</span>
+            </h2>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {[
+                {
+                  quote: "This platform changed my life. I'm making more than ever and have a real connection with my fans.",
+                  name: "Karol R.",
+                  role: "Fashion & Lifestyle Creator",
+                  avatar: "https://i.imgur.com/b2oBun3.png"
+                },
+                {
+                  quote: "Finally, a platform that understands the needs of creators. The support is amazing.",
+                  name: "Sofia V.",
+                  role: "Fitness & Dance Creator",
+                  avatar: "https://i.pravatar.cc/150?img=32"
+                }
+              ].map((testimonial, i) => (
+                <GlassCard key={i} premium className="luxury-hover-lift" style={{ animationDelay: `${i * 100}ms` }}>
+                  <div className="flex items-start gap-3 mb-4">
+                    <Star className="text-luxury-gold flex-shrink-0" size={20} />
+                    <Star className="text-luxury-gold flex-shrink-0" size={20} />
+                    <Star className="text-luxury-gold flex-shrink-0" size={20} />
+                    <Star className="text-luxury-gold flex-shrink-0" size={20} />
+                    <Star className="text-luxury-gold flex-shrink-0" size={20} />
+                  </div>
+                  <p className="text-white/80 font-light leading-relaxed mb-6">
+                    "{testimonial.quote}"
+                  </p>
+                  <div className="flex items-center gap-3 pt-4 border-t border-white/10">
+                    <img
+                      src={testimonial.avatar}
+                      alt={testimonial.name}
+                      className="w-12 h-12 rounded-full object-cover ring-2 ring-luxury-gold/30"
+                      loading="lazy"
+                      decoding="async"
+                      width={48}
+                      height={48}
+                    />
+                    <div>
+                      <p className="font-light text-white">{testimonial.name}</p>
+                      <p className="text-xs text-white/50 uppercase tracking-wider">{testimonial.role}</p>
+                    </div>
+                  </div>
+                </GlassCard>
               ))}
             </div>
           </div>
+        </section>
 
-          {/* PPV Content Demo */}
-          <div className="mt-12 grid md:grid-cols-2 gap-8 items-center">
-            <div className="md:pl-8 md:order-2">
-              <FeatureCard
-                icon={<Lock className="text-yellow-300" />}
-                title="Pay-Per-View (PPV) Content"
-              >
-                Sell individual photo sets, videos, or other digital content for
-                a one-time fee. Perfect for exclusive drops and maximizing
-                revenue from your most sought-after content.
-              </FeatureCard>
-            </div>
-            <div className="grid grid-cols-2 gap-4 md:order-1">
-              <div className="relative flex flex-col items-center justify-center h-48 rounded-2xl border border-white/20 bg-white/10 backdrop-blur group p-4">
-                <div className="absolute inset-0 rounded-2xl bg-black/40 backdrop-blur-sm" />
-                <div className="relative z-10 flex flex-col items-center text-center">
-                  <Lock size={32} className="text-white/70" />
-                  <p className="mt-2 text-xs text-neutral-200/90">
-                    Exclusive Video
-                  </p>
-                  <button className="mt-3 rounded-lg bg-yellow-300 px-3 py-1.5 text-xs font-semibold text-neutral-900">
-                    Unlock $19.99
-                  </button>
-                </div>
-              </div>
-              <div className="relative flex flex-col items-center justify-center h-48 rounded-2xl border border-white/20 bg-white/10 backdrop-blur group p-4">
-                <div className="absolute inset-0 rounded-2xl bg-black/40 backdrop-blur-sm" />
-                <div className="relative z-10 flex flex-col items-center text-center">
-                  <Lock size={32} className="text-white/70" />
-                  <p className="mt-2 text-xs text-neutral-200/90">
-                    Behind The Scenes
-                  </p>
-                  <button className="mt-3 rounded-lg bg-yellow-300 px-3 py-1.5 text-xs font-semibold text-neutral-900">
-                    Unlock $9.99
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <FeatureCard
-              icon={<Heart className="text-yellow-300" />}
-              title="Direct Messaging & Tips"
-            >
-              Engage directly with your fans through private messages. Fans can
-              also send you tips to show their support.
-            </FeatureCard>
-            <FeatureCard
-              icon={<Zap className="text-yellow-300" />}
-              title="Exclusive Live Streaming"
-            >
-              Host exclusive live streams for your subscribers. Engage with your
-              audience in real-time and offer unique experiences.
-            </FeatureCard>
-            <FeatureCard
-              icon={<Gift className="text-yellow-300" />}
-              title="Wishlist & Gifting"
-            >
-              Allow fans to buy you gifts directly from your wishlist. A fun and
-              personal way for fans to support you.
-            </FeatureCard>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Us Section */}
-      <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-4">
-          <h2 className="text-3xl font-semibold tracking-tight text-center">
-            Why Choose Us?
+        {/* FAQ Section */}
+        <section className="py-24 container mx-auto px-6 max-w-4xl">
+          <h2 className="text-4xl font-extralight text-white mb-12 tracking-tight text-center">
+            Frequently Asked <span className="text-luxury-gold">Questions</span>
           </h2>
-          <p className="mt-2 text-neutral-300/80 text-center max-w-xl mx-auto">
-            Built for creators, by creators. We understand what you need to
-            succeed.
-          </p>
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
-            <div className="text-center">
-              <CheckCircle className="mx-auto text-yellow-300" size={40} />
-              <h3 className="mt-4 font-semibold text-lg">
-                Highest Commission Rate
-              </h3>
-              <p className="mt-1 text-sm text-neutral-300/80">
-                Keep 90% of your earnings. No hidden fees, no surprises. We only
-                make money when you do.
-              </p>
-            </div>
-            <div className="text-center">
-              <CheckCircle className="mx-auto text-yellow-300" size={40} />
-              <h3 className="mt-4 font-semibold text-lg">
-                Fast & Secure Payouts
-              </h3>
-              <p className="mt-1 text-sm text-neutral-300/80">
-                Get paid out weekly directly to your bank account. Your
-                financial security is our priority.
-              </p>
-            </div>
-            <div className="text-center">
-              <CheckCircle className="mx-auto text-yellow-300" size={40} />
-              <h3 className="mt-4 font-semibold text-lg">
-                You Own Your Content
-              </h3>
-              <p className="mt-1 text-sm text-neutral-300/80">
-                You have 100% ownership of your content and your audience. We
-                never lock you in.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Testimonials Section */}
-      <section className="py-16 md:py-24 bg-black/40">
-        <div className="mx-auto max-w-4xl px-4">
-          <h2 className="text-3xl font-semibold tracking-tight text-center">
-            Loved by Colombian Creators
-          </h2>
-          <div className="mt-10 grid md:grid-cols-2 gap-8">
-            <div className="rounded-2xl bg-white/5 p-6 border border-white/10">
-              <p className="text-neutral-200">
-                "This platform changed my life. I'm making more than ever and
-                have a real connection with my fans."
-              </p>
-              <div className="mt-4 flex items-center gap-3">
-                <img
-                  src="https://i.imgur.com/b2oBun3.png"
-                  alt="Creator"
-                  className="w-10 h-10 rounded-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                  width={40}
-                  height={40}
-                />
-                <div>
-                  <p className="font-semibold">Karol R.</p>
-                  <p className="text-xs text-neutral-400">
-                    Fashion & Lifestyle Creator
-                  </p>
-                </div>
+          <GlassCard className="space-y-8">
+            {[
+              {
+                question: "How much does it cost?",
+                answer: "It's free to create an account. We take a flat 10% commission on your earnings. That's it."
+              },
+              {
+                question: "What kind of content can I post?",
+                answer: "You can post photos, videos, and text. All content must adhere to our acceptable use policy."
+              },
+              {
+                question: "How do I get paid?",
+                answer: "We pay out weekly via direct bank transfer. You can connect your bank account securely in your dashboard."
+              }
+            ].map((faq, i) => (
+              <div key={i} className={i > 0 ? "pt-8 border-t border-white/10" : ""}>
+                <h3 className="font-light text-lg text-white mb-3 tracking-tight">{faq.question}</h3>
+                <p className="text-sm text-white/60 font-light leading-relaxed">{faq.answer}</p>
               </div>
-            </div>
-            <div className="rounded-2xl bg-white/5 p-6 border border-white/10">
-              <p className="text-neutral-200">
-                "Finally, a platform that understands the needs of Colombian
-                creators. The support is amazing."
-              </p>
-              <div className="mt-4 flex items-center gap-3">
-                <img
-                  src="https://i.pravatar.cc/150?img=32"
-                  alt="Creator"
-                  className="w-10 h-10 rounded-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                  width={40}
-                  height={40}
-                />
-                <div>
-                  <p className="font-semibold">Sofia V.</p>
-                  <p className="text-xs text-neutral-400">
-                    Fitness & Dance Creator
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+            ))}
+          </GlassCard>
+        </section>
 
-      {/* FAQ Section */}
-      <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-3xl px-4">
-          <h2 className="text-3xl font-semibold tracking-tight text-center">
-            Frequently Asked Questions
-          </h2>
-          <div className="mt-8 space-y-4">
-            <div>
-              <h3 className="font-semibold">How much does it cost?</h3>
-              <p className="text-sm text-neutral-300/80">
-                It's free to create an account. We take a flat 10% commission on
-                your earnings. That's it.
+        {/* Call to Action Section */}
+        <section className="py-32 relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-luxury-gold/10 via-transparent to-luxury-gold/5"></div>
+          <div className="relative container mx-auto px-6 max-w-4xl text-center">
+            <GlassCard premium className="py-16">
+              <Crown className="w-16 h-16 text-luxury-gold mx-auto mb-6" />
+              <h2 className="text-5xl font-extralight text-white mb-6 tracking-tight">
+                Ready to Start <span className="text-luxury-gold">Earning?</span>
+              </h2>
+              <p className="text-lg text-white/60 font-light mb-10 max-w-2xl mx-auto leading-relaxed">
+                Join our community of creators and take control of your content and income.
+                Signing up is fast and easy.
               </p>
-            </div>
-            <div>
-              <h3 className="font-semibold">
-                What kind of content can I post?
-              </h3>
-              <p className="text-sm text-neutral-300/80">
-                You can post photos, videos, and text. All content must adhere
-                to our acceptable use policy.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold">How do I get paid?</h3>
-              <p className="text-sm text-neutral-300/80">
-                We pay out weekly via direct bank transfer. You can connect your
-                bank account securely in your dashboard.
-              </p>
-            </div>
+              <LuxuryButton variant="gold" size="lg">
+                <Sparkles className="w-5 h-5 mr-2" />
+                Become a Creator Today
+              </LuxuryButton>
+            </GlassCard>
           </div>
-        </div>
-      </section>
-
-      {/* Call to Action Section */}
-      <section className="py-24 bg-yellow-300/90">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-semibold text-neutral-900">
-            Ready to Start Earning?
-          </h2>
-          <p className="mt-3 text-neutral-800">
-            Join our community of Colombian creators and take control of your
-            content and income. Signing up is fast and easy.
-          </p>
-          <button className="mt-6 inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-6 py-3 text-lg font-semibold text-white shadow-lg transform hover:scale-105 transition-transform">
-            Become a Creator Today
-          </button>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
   );
 }

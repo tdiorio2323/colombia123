@@ -1,9 +1,5 @@
 import { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { GlassCard, LuxuryButton, LuxuryInput, LuxuryTextarea } from "@/components/ui/luxury";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/contexts/AuthContext";
 import { mediaApi } from "@/lib/prisma";
@@ -18,6 +14,7 @@ import {
   Loader2,
   CheckCircle,
   AlertCircle,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -170,167 +167,194 @@ export default function UploadPage() {
 
   if (profile?.role !== "CREATOR") {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <Card className="max-w-md">
-          <CardContent className="p-6 text-center">
-            <AlertCircle className="w-12 h-12 text-destructive mx-auto mb-4" />
-            <h2 className="text-xl font-bold mb-2">Access Denied</h2>
-            <p className="text-muted-foreground">
-              Only creators can upload media content.
-            </p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-6">
+        {/* Luxury Background */}
+        <div className="absolute inset-0 bg-luxury-black"></div>
+        <div className="absolute inset-0 bg-luxury-gradient"></div>
+        <div className="absolute inset-0 bg-luxury-noise"></div>
+
+        <GlassCard className="relative z-10 max-w-md text-center">
+          <div className="w-16 h-16 rounded-full bg-luxury-gold/10 border border-luxury-gold/30 flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-8 h-8 text-luxury-gold" />
+          </div>
+          <h2 className="text-2xl font-extralight text-white mb-3 tracking-tight">
+            Access <span className="text-luxury-gold">Denied</span>
+          </h2>
+          <p className="text-white/60 font-light">
+            Only creators can upload media content. Please switch to a creator account.
+          </p>
+        </GlassCard>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-6 pt-24">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-luxury-display font-bold text-gradient-luxury mb-2">
-            Upload Content
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Luxury Background */}
+      <div className="absolute inset-0 bg-luxury-black"></div>
+      <div className="absolute inset-0 bg-luxury-gradient"></div>
+      <div className="absolute inset-0 bg-luxury-noise"></div>
+
+      {/* Decorative Elements */}
+      <div className="absolute top-20 right-20 w-96 h-96 bg-luxury-gold/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-40 left-20 w-80 h-80 bg-luxury-gold/3 rounded-full blur-3xl"></div>
+
+      <div className="relative z-10 container mx-auto px-6 py-24">
+        {/* Header */}
+        <div className="max-w-4xl mx-auto mb-12 text-center animate-luxury-fade-in">
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <div className="px-4 py-2 rounded-full border border-luxury-gold/30 bg-luxury-gold/10">
+              <div className="flex items-center gap-2">
+                <Crown className="w-4 h-4 text-luxury-gold" />
+                <span className="text-xs uppercase tracking-widest text-luxury-gold font-semibold">
+                  Creator Dashboard
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <h1 className="text-5xl md:text-6xl font-extralight text-white mb-4 tracking-tight">
+            Upload <span className="text-luxury-gold">Content</span>
           </h1>
-          <p className="text-white/80">Share your content with your fans</p>
-          <Badge className="glass-card bg-gold/20 text-gold border-gold/30 mt-2">
-            <Crown className="w-3 h-3 mr-1" />
-            Creator Dashboard
-          </Badge>
+          <p className="text-white/60 text-lg font-light">
+            Share your exclusive content with your fans
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Upload Form */}
+        <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Upload Area */}
-          <Card className="auth-card-luxury border-0">
-            <CardHeader>
-              <h2 className="text-xl font-luxury-display font-bold text-gold">
-                Select Media
-              </h2>
-            </CardHeader>
-            <CardContent>
-              <div
-                className="border-2 border-dashed border-gold/30 rounded-xl p-8 text-center hover:border-gold/50 transition-colors cursor-pointer"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <UploadIcon className="w-12 h-12 text-gold/60 mx-auto mb-4" />
-                <p className="text-white/80 mb-2">Click to select files</p>
-                <p className="text-white/60 text-sm">
-                  Images, videos, or audio files up to 100MB
-                </p>
+          <GlassCard className="p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-luxury-gold/10 rounded-xl border border-luxury-gold/30">
+                <UploadIcon className="w-5 h-5 text-luxury-gold" />
               </div>
+              <h2 className="text-xl font-light text-white tracking-tight">Select Media</h2>
+            </div>
 
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                accept="image/*,video/*,audio/*"
-                onChange={handleFileSelect}
-                className="hidden"
-              />
+            <div
+              className="border-2 border-dashed border-luxury-gold/30 rounded-2xl p-12 text-center hover:border-luxury-gold/50 hover:bg-white/5 transition-all cursor-pointer"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <div className="w-16 h-16 rounded-full bg-luxury-gold/10 border border-luxury-gold/30 flex items-center justify-center mx-auto mb-4">
+                <UploadIcon className="w-8 h-8 text-luxury-gold" />
+              </div>
+              <p className="text-white/80 font-light mb-2">Click to select files</p>
+              <p className="text-white/50 text-sm">
+                Images, videos, or audio files up to 100MB
+              </p>
+            </div>
 
-              {/* Preview uploaded files */}
-              {uploads.length > 0 && (
-                <div className="mt-6 space-y-3">
-                  <h3 className="text-sm font-medium text-gold">
-                    Selected Files
-                  </h3>
-                  {uploads.map((upload, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-3 bg-white/5 rounded-lg"
-                    >
-                      <div className="flex items-center">
-                        <div className="text-gold mr-3">
-                          {getMediaIcon(upload.type)}
-                        </div>
-                        <div>
-                          <p className="text-white text-sm font-medium">
-                            {upload.file.name}
-                          </p>
-                          <p className="text-white/60 text-xs">
-                            {(upload.file.size / 1024 / 1024).toFixed(1)} MB
-                          </p>
-                        </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*,video/*,audio/*"
+              onChange={handleFileSelect}
+              className="hidden"
+            />
+
+            {/* Preview uploaded files */}
+            {uploads.length > 0 && (
+              <div className="mt-6 space-y-3">
+                <h3 className="text-xs uppercase tracking-wider text-luxury-gold font-semibold">
+                  Selected Files ({uploads.length})
+                </h3>
+                {uploads.map((upload, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all"
+                  >
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className="text-luxury-gold flex-shrink-0">
+                        {getMediaIcon(upload.type)}
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeUpload(index)}
-                        className="text-destructive hover:text-destructive/80"
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-white text-sm font-light truncate">
+                          {upload.file.name}
+                        </p>
+                        <p className="text-white/50 text-xs">
+                          {(upload.file.size / 1024 / 1024).toFixed(1)} MB
+                        </p>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                    <button
+                      onClick={() => removeUpload(index)}
+                      className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all flex-shrink-0 ml-3"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </GlassCard>
 
           {/* Content Details */}
-          <Card className="auth-card-luxury border-0">
-            <CardHeader>
-              <h2 className="text-xl font-luxury-display font-bold text-gold">
-                Content Details
-              </h2>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {error && (
-                  <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-2" />
-                    {error}
-                  </div>
-                )}
+          <GlassCard premium className="p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-luxury-gold/10 rounded-xl border border-luxury-gold/30">
+                <Sparkles className="w-5 h-5 text-luxury-gold" />
+              </div>
+              <h2 className="text-xl font-light text-white tracking-tight">Content Details</h2>
+            </div>
 
-                {uploadStatus === "success" && (
-                  <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-sm flex items-center">
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Upload successful!
-                  </div>
-                )}
-
-                <div>
-                  <label className="text-sm font-medium text-gold block mb-2">
-                    Title *
-                  </label>
-                  <Input
-                    value={formData.title}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        title: e.target.value,
-                      }))
-                    }
-                    placeholder="Enter a title for your content"
-                    className="auth-input-luxury text-white placeholder:text-white/50"
-                    required
-                  />
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center gap-3">
+                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                  <span>{error}</span>
                 </div>
+              )}
 
-                <div>
-                  <label className="text-sm font-medium text-gold block mb-2">
-                    Description
-                  </label>
-                  <Textarea
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        description: e.target.value,
-                      }))
-                    }
-                    placeholder="Describe your content..."
-                    rows={3}
-                    className="auth-input-luxury text-white placeholder:text-white/50 resize-none"
-                  />
+              {uploadStatus === "success" && (
+                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                  <span>Upload successful!</span>
                 </div>
+              )}
 
-                <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
-                  <div>
-                    <label className="text-sm font-medium text-gold block">
+              <div>
+                <label className="text-xs uppercase tracking-wider text-luxury-gold font-semibold block mb-3">
+                  Title *
+                </label>
+                <LuxuryInput
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      title: e.target.value,
+                    }))
+                  }
+                  placeholder="Enter a title for your content"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="text-xs uppercase tracking-wider text-luxury-gold font-semibold block mb-3">
+                  Description
+                </label>
+                <LuxuryTextarea
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
+                  placeholder="Describe your content..."
+                  rows={3}
+                />
+              </div>
+
+              <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <label className="text-sm font-light text-white block mb-1">
                       Premium Content
                     </label>
-                    <p className="text-white/60 text-xs">
+                    <p className="text-white/50 text-xs">
                       Require subscription or payment to view
                     </p>
                   </div>
@@ -341,51 +365,52 @@ export default function UploadPage() {
                     }
                   />
                 </div>
+              </div>
 
-                {formData.isPremium && (
-                  <div>
-                    <label className="text-sm font-medium text-gold block mb-2 flex items-center">
-                      <DollarSign className="w-4 h-4 mr-1" />
-                      Price (USD)
-                    </label>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={formData.price}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          price: e.target.value,
-                        }))
-                      }
-                      placeholder="0.00"
-                      className="auth-input-luxury text-white placeholder:text-white/50"
-                      required
-                    />
-                  </div>
+              {formData.isPremium && (
+                <div>
+                  <label className="text-xs uppercase tracking-wider text-luxury-gold font-semibold block mb-3 flex items-center gap-2">
+                    <DollarSign className="w-4 h-4" />
+                    Price (USD)
+                  </label>
+                  <LuxuryInput
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={formData.price}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        price: e.target.value,
+                      }))
+                    }
+                    placeholder="0.00"
+                    required
+                  />
+                </div>
+              )}
+
+              <LuxuryButton
+                type="submit"
+                variant="gold"
+                size="lg"
+                disabled={isUploading || uploads.length === 0}
+                className="w-full"
+              >
+                {isUploading ? (
+                  <>
+                    <Loader2 className="animate-spin h-5 w-5 mr-2" />
+                    Uploading...
+                  </>
+                ) : (
+                  <>
+                    <UploadIcon className="h-5 w-5 mr-2" />
+                    Upload Content
+                  </>
                 )}
-
-                <Button
-                  type="submit"
-                  disabled={isUploading || uploads.length === 0}
-                  className="w-full btn-luxury py-3 text-base"
-                >
-                  {isUploading ? (
-                    <>
-                      <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                      Uploading...
-                    </>
-                  ) : (
-                    <>
-                      <UploadIcon className="h-4 w-4 mr-2" />
-                      Upload Content
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+              </LuxuryButton>
+            </form>
+          </GlassCard>
         </div>
       </div>
     </div>

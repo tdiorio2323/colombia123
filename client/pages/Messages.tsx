@@ -14,11 +14,8 @@ import {
 } from "lucide-react";
 
 import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { GlassCard, LuxuryButton, LuxuryInput } from "@/components/ui/luxury";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
@@ -211,234 +208,304 @@ export default function MessagesPage() {
   const headerTitle = user?.role === "CREATOR" ? "Creator inbox" : "Messages";
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] px-6 pb-16 pt-8">
-      <div className="mx-auto flex max-w-7xl flex-col gap-8">
-        <div className="flex flex-col gap-3">
-          <Badge className="w-fit rounded-full border border-white/10 bg-white/10 text-white/70">
-            <MessageCircle className="mr-2 h-3.5 w-3.5" /> Aurora Messenger
-          </Badge>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h1 className="text-3xl font-semibold text-white sm:text-4xl">{headerTitle}</h1>
-              <p className="text-sm text-white/60 sm:text-base">
-                {user?.role === "CREATOR"
-                  ? "Respond in real time, queue premium replies, and trigger upsells in one glassy console."
-                  : "Talk directly with your favorite creators, unlock concierge perks, and keep your streaks alive."}
-              </p>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Luxury Background */}
+      <div className="absolute inset-0 bg-luxury-black"></div>
+      <div className="absolute inset-0 bg-luxury-gradient"></div>
+      <div className="absolute inset-0 bg-luxury-noise"></div>
+
+      {/* Decorative Elements */}
+      <div className="absolute top-20 right-20 w-96 h-96 bg-luxury-gold/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-40 left-20 w-80 h-80 bg-luxury-gold/3 rounded-full blur-3xl"></div>
+
+      <div className="relative z-10 container mx-auto px-6 py-24">
+        {/* Header */}
+        <div className="max-w-7xl mx-auto mb-12 animate-luxury-fade-in">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-luxury-gold/30 bg-luxury-gold/10">
+              <MessageCircle className="w-4 h-4 text-luxury-gold" />
+              <span className="text-xs uppercase tracking-widest text-luxury-gold font-semibold">
+                Havana Messenger
+              </span>
             </div>
-            <div className="flex items-center gap-2 text-xs text-white/50">
-              <ShieldCheck className="h-4 w-4" /> Protected by Aurora Trust & Safety
+            <div className="flex items-center gap-2 text-xs text-white/40">
+              <ShieldCheck className="w-4 h-4" />
+              <span>Protected by Trust & Safety</span>
             </div>
           </div>
+
+          <h1 className="text-5xl font-extralight text-white mb-3 tracking-tight">
+            {user?.role === "CREATOR" ? (
+              <>
+                Creator <span className="text-luxury-gold">Inbox</span>
+              </>
+            ) : (
+              <>
+                Direct <span className="text-luxury-gold">Messages</span>
+              </>
+            )}
+          </h1>
+          <p className="text-white/60 text-lg font-light max-w-3xl">
+            {user?.role === "CREATOR"
+              ? "Respond in real time, queue premium replies, and trigger upsells in one luxury console."
+              : "Talk directly with your favorite creators, unlock concierge perks, and keep your streaks alive."}
+          </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[340px,1fr]">
-          <Card className="glass-card flex h-[70vh] flex-col border-white/10 bg-white/5">
-            <CardHeader className="space-y-4">
+        {/* Messenger Interface */}
+        <div className="max-w-7xl mx-auto grid gap-6 lg:grid-cols-[360px,1fr]">
+          {/* Conversations List */}
+          <GlassCard className="h-[70vh] flex flex-col p-0 overflow-hidden">
+            <div className="p-6 space-y-4 border-b border-white/10">
+              {/* Search */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
-                <Input
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                <LuxuryInput
                   value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search fans, tier, or handle"
-                  className="pl-9 text-sm text-white placeholder:text-white/40"
+                  className="pl-11"
                 />
               </div>
+
+              {/* Filters */}
               <div className="flex gap-2">
-                <Button
-                  variant={activeFilter === "all" ? "default" : "outline"}
-                  className={cn(
-                    "flex-1 border-white/15 text-xs",
-                    activeFilter === "all" ? "bg-white/15 text-white" : "bg-white/5 text-white/70",
-                  )}
+                <button
                   onClick={() => setActiveFilter("all")}
-                >
-                  <Filter className="mr-2 h-3.5 w-3.5" /> All
-                </Button>
-                <Button
-                  variant={activeFilter === "vip" ? "default" : "outline"}
                   className={cn(
-                    "flex-1 border-white/15 text-xs",
-                    activeFilter === "vip" ? "bg-white/15 text-white" : "bg-white/5 text-white/70",
+                    "flex-1 px-3 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all",
+                    "border border-white/15",
+                    activeFilter === "all"
+                      ? "bg-luxury-gold text-luxury-black"
+                      : "bg-white/5 text-white/60 hover:bg-white/10"
                   )}
+                >
+                  <Filter className="w-3 h-3 inline mr-1" /> All
+                </button>
+                <button
                   onClick={() => setActiveFilter("vip")}
-                >
-                  <Crown className="mr-2 h-3.5 w-3.5" /> VIP
-                </Button>
-                <Button
-                  variant={activeFilter === "unread" ? "default" : "outline"}
                   className={cn(
-                    "flex-1 border-white/15 text-xs",
-                    activeFilter === "unread" ? "bg-white/15 text-white" : "bg-white/5 text-white/70",
+                    "flex-1 px-3 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all",
+                    "border border-white/15",
+                    activeFilter === "vip"
+                      ? "bg-luxury-gold text-luxury-black"
+                      : "bg-white/5 text-white/60 hover:bg-white/10"
                   )}
-                  onClick={() => setActiveFilter("unread")}
                 >
-                  <Flame className="mr-2 h-3.5 w-3.5" /> Unread
-                </Button>
+                  <Crown className="w-3 h-3 inline mr-1" /> VIP
+                </button>
+                <button
+                  onClick={() => setActiveFilter("unread")}
+                  className={cn(
+                    "flex-1 px-3 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all",
+                    "border border-white/15",
+                    activeFilter === "unread"
+                      ? "bg-luxury-gold text-luxury-black"
+                      : "bg-white/5 text-white/60 hover:bg-white/10"
+                  )}
+                >
+                  <Flame className="w-3 h-3 inline mr-1" /> Unread
+                </button>
               </div>
-            </CardHeader>
-            <CardContent className="flex-1 overflow-hidden px-0">
-              <ScrollArea className="h-full">
-                <div className="space-y-1 px-3">
-                  {filteredConversations.map((conversation) => {
-                    const isActive = conversation.id === selectedConversation?.id;
-                    return (
-                      <button
-                        key={conversation.id}
-                        onClick={() => setSelectedConversation(conversation)}
-                        className={cn(
-                          "w-full rounded-2xl border border-transparent px-3 py-3 text-left transition",
-                          isActive
-                            ? "border-white/15 bg-white/10 shadow-lg shadow-blue-500/10"
-                            : "hover:border-white/10 hover:bg-white/5",
-                        )}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="relative">
-                            <Avatar className="h-11 w-11 border border-white/10">
-                              <AvatarImage src={conversation.avatar} alt={conversation.name} />
-                              <AvatarFallback className="bg-blue/20 text-white">
-                                {conversation.name.slice(0, 2).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            {conversation.isOnline && (
-                              <span className="absolute -right-0.5 bottom-0 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-background" />
-                            )}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between">
-                              <p className="text-sm font-medium text-white">{conversation.name}</p>
-                              <span className="text-xs text-white/40">{conversation.timestamp}</span>
-                            </div>
-                            <p className="truncate text-xs text-white/50">{conversation.lastMessage}</p>
-                            <div className="mt-2 flex items-center gap-2 text-[11px] text-white/40">
-                              <Badge className="border-white/15 bg-white/5 text-white/60">
-                                {conversation.tier}
-                              </Badge>
-                              <span>Lifetime spend {conversation.spend}</span>
-                            </div>
-                          </div>
-                          {conversation.unread > 0 && (
-                            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-accent/40 text-xs text-white">
-                              {conversation.unread}
-                            </div>
+            </div>
+
+            {/* Conversation List */}
+            <ScrollArea className="flex-1">
+              <div className="p-3 space-y-2">
+                {filteredConversations.map((conversation) => {
+                  const isActive = conversation.id === selectedConversation?.id;
+                  return (
+                    <button
+                      key={conversation.id}
+                      onClick={() => setSelectedConversation(conversation)}
+                      className={cn(
+                        "w-full rounded-2xl p-3 text-left transition-all",
+                        "border",
+                        isActive
+                          ? "border-luxury-gold/30 bg-luxury-gold/10 shadow-lg"
+                          : "border-transparent hover:border-white/10 hover:bg-white/5"
+                      )}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <Avatar className="h-12 w-12 border-2 border-white/10">
+                            <AvatarImage src={conversation.avatar} alt={conversation.name} />
+                            <AvatarFallback className="bg-luxury-gold/20 text-white">
+                              {conversation.name.slice(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          {conversation.isOnline && (
+                            <span className="absolute -right-0.5 bottom-0 h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-luxury-black" />
                           )}
                         </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </ScrollArea>
-            </CardContent>
-          </Card>
 
-          <Card className="glass-card flex h-[70vh] flex-col border-white/10 bg-white/5">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="text-sm font-light text-white truncate">
+                              {conversation.name}
+                            </p>
+                            <span className="text-xs text-white/40 ml-2 flex-shrink-0">
+                              {conversation.timestamp}
+                            </span>
+                          </div>
+                          <p className="text-xs text-white/50 truncate mb-2">
+                            {conversation.lastMessage}
+                          </p>
+                          <div className="flex items-center gap-2 text-[10px] text-white/40">
+                            <span className={cn(
+                              "px-2 py-0.5 rounded-full border",
+                              conversation.tier === "Constellation"
+                                ? "border-luxury-gold/30 bg-luxury-gold/10 text-luxury-gold"
+                                : "border-white/15 bg-white/5 text-white/60"
+                            )}>
+                              {conversation.tier}
+                            </span>
+                            <span>{conversation.spend}</span>
+                          </div>
+                        </div>
+
+                        {conversation.unread > 0 && (
+                          <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-luxury-gold text-luxury-black text-xs font-bold">
+                            {conversation.unread}
+                          </div>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </ScrollArea>
+          </GlassCard>
+
+          {/* Message Thread */}
+          <GlassCard className="h-[70vh] flex flex-col p-0 overflow-hidden" premium>
             {selectedConversation ? (
               <>
-                <CardHeader className="flex flex-col gap-4 border-b border-white/5">
+                {/* Thread Header */}
+                <div className="p-6 border-b border-white/10 space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3 text-white">
-                      <Avatar className="h-12 w-12 border border-white/10">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-14 w-14 border-2 border-luxury-gold/30">
                         <AvatarImage
                           src={selectedConversation.avatar}
                           alt={selectedConversation.name}
                         />
-                        <AvatarFallback className="bg-blue/20 text-white">
+                        <AvatarFallback className="bg-luxury-gold/20 text-white text-lg">
                           {selectedConversation.name.slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="text-base font-semibold">{selectedConversation.name}</p>
+                        <p className="text-lg font-light text-white">
+                          {selectedConversation.name}
+                        </p>
                         <p className="text-xs text-white/50">{selectedConversation.handle}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-white/50">
-                      <Badge className="border-white/15 bg-white/5 text-white/60">
+                    <div className="flex items-center gap-3 text-xs">
+                      <span className={cn(
+                        "px-3 py-1 rounded-full border",
+                        selectedConversation.tier === "Constellation"
+                          ? "border-luxury-gold/30 bg-luxury-gold/10 text-luxury-gold"
+                          : "border-white/15 bg-white/5 text-white/60"
+                      )}>
                         {selectedConversation.tier}
-                      </Badge>
-                      <span>{selectedConversation.isOnline ? "Online" : "Last seen " + selectedConversation.timestamp}</span>
+                      </span>
+                      <span className="text-white/50">
+                        {selectedConversation.isOnline ? (
+                          <span className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                            Online
+                          </span>
+                        ) : (
+                          `Last seen ${selectedConversation.timestamp}`
+                        )}
+                      </span>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-2 text-xs text-white/50">
-                    <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                      <Sparkles className="h-3.5 w-3.5" /> Suggested upsell: livestream VIP
-                    </div>
-                    <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1">
-                      <Crown className="h-3.5 w-3.5" /> Lifetime spend {selectedConversation.spend}
-                    </div>
-                  </div>
-                </CardHeader>
 
-                <CardContent className="flex-1 overflow-hidden px-0">
-                  <ScrollArea className="h-full px-6 py-6">
-                    <div className="space-y-6">
-                      {thread.map((message) => (
+                  {/* Insights */}
+                  <div className="flex flex-wrap gap-2">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-luxury-gold/20 bg-luxury-gold/5 text-xs text-luxury-gold">
+                      <Sparkles className="w-3 h-3" />
+                      <span>Suggested upsell: livestream VIP</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 text-xs text-white/50">
+                      <Crown className="w-3 h-3" />
+                      <span>Lifetime spend {selectedConversation.spend}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Messages */}
+                <ScrollArea className="flex-1 px-6 py-6">
+                  <div className="space-y-6">
+                    {thread.map((message) => (
+                      <div
+                        key={message.id}
+                        className={cn(
+                          "flex animate-luxury-fade-in",
+                          message.sender === "self" ? "justify-end" : "justify-start"
+                        )}
+                      >
                         <div
-                          key={message.id}
-                          className={cn("flex", message.sender === "self" ? "justify-end" : "justify-start")}
+                          className={cn(
+                            "max-w-md rounded-3xl px-5 py-4 text-sm leading-relaxed",
+                            "border shadow-lg transition-all",
+                            message.sender === "self"
+                              ? "border-luxury-gold/30 bg-gradient-to-br from-luxury-gold/20 to-luxury-gold/10 text-white"
+                              : "border-white/10 bg-white/5 text-white/80 hover:bg-white/10"
+                          )}
                         >
-                          <div
-                            className={cn(
-                              "max-w-sm rounded-3xl border px-5 py-4 text-sm leading-relaxed shadow-lg transition",
-                              message.sender === "self"
-                                ? "border-accent/30 bg-gradient-to-br from-accent/40 to-blue/40 text-white"
-                                : "border-white/10 bg-white/5 text-white/80",
-                            )}
-                          >
-                            <p>{message.content}</p>
-                            <div className="mt-3 flex items-center justify-between text-[11px] text-white/40">
-                              <span>{message.timestamp}</span>
-                              {message.sender === "self" && <span>Read</span>}
-                            </div>
+                          <p className="font-light">{message.content}</p>
+                          <div className="mt-3 flex items-center justify-between text-[10px] text-white/40 uppercase tracking-wider">
+                            <span>{message.timestamp}</span>
+                            {message.sender === "self" && <span>Read</span>}
                           </div>
                         </div>
-                      ))}
-                      <div ref={messageEndRef} />
-                    </div>
-                  </ScrollArea>
-                </CardContent>
+                      </div>
+                    ))}
+                    <div ref={messageEndRef} />
+                  </div>
+                </ScrollArea>
 
-                <div className="border-t border-white/10 bg-white/5 p-4">
+                {/* Composer */}
+                <div className="p-4 border-t border-white/10 bg-white/5">
                   <div className="flex items-center gap-3">
-                    <Button variant="ghost" className="rounded-full border border-white/10 bg-white/5 text-white" size="icon">
-                      <ImageIcon className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" className="rounded-full border border-white/10 bg-white/5 text-white" size="icon">
-                      <Paperclip className="h-4 w-4" />
-                    </Button>
-                    <Input
+                    <button className="w-10 h-10 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all">
+                      <ImageIcon className="w-4 h-4" />
+                    </button>
+                    <button className="w-10 h-10 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all">
+                      <Paperclip className="w-4 h-4" />
+                    </button>
+                    <LuxuryInput
                       value={composerValue}
-                      onChange={(event) => setComposerValue(event.target.value)}
+                      onChange={(e) => setComposerValue(e.target.value)}
                       placeholder="Write a premium reply..."
-                      className="flex-1 border-white/10 bg-white/5 text-white placeholder:text-white/40"
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter" && !event.shiftKey) {
-                          event.preventDefault();
+                      className="flex-1"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
                           handleSend();
                         }
                       }}
                     />
-                    <Button
-                      variant="ghost"
-                      className="rounded-full border border-white/10 bg-white/5 text-white"
-                      size="icon"
-                    >
-                      <Smile className="h-4 w-4" />
-                    </Button>
-                    <Button className="btn-luxury" onClick={handleSend}>
-                      <Send className="mr-2 h-4 w-4" />
+                    <button className="w-10 h-10 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all">
+                      <Smile className="w-4 h-4" />
+                    </button>
+                    <LuxuryButton variant="gold" onClick={handleSend}>
+                      <Send className="w-4 h-4 mr-2" />
                       Send
-                    </Button>
+                    </LuxuryButton>
                   </div>
                 </div>
               </>
             ) : (
-              <div className="flex flex-1 flex-col items-center justify-center gap-4 text-white/60">
-                <MessageCircle className="h-10 w-10" />
-                <p>Select a conversation to begin</p>
+              <div className="flex-1 flex flex-col items-center justify-center gap-4 text-white/60">
+                <MessageCircle className="w-16 h-16 text-luxury-gold/30" />
+                <p className="text-lg font-light">Select a conversation to begin</p>
               </div>
             )}
-          </Card>
+          </GlassCard>
         </div>
       </div>
     </div>
