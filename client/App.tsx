@@ -21,6 +21,7 @@ import NotFound from "./pages/NotFound";
 import ProfilePage from "./pages/Profile";
 import CreatorPage from "./components/CreatorPage";
 import ShowcasePage from "./pages/Showcase";
+import RouteGallery from "./pages/RouteGallery";
 
 import { AuthProvider } from "./contexts/AuthContext";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -108,6 +109,11 @@ const App = () => (
                   </CreatorOnlyRoute>
                 }
               />
+
+              {/* Dev-only routes */}
+              {import.meta.env.DEV && (
+                <Route path="/__routes" element={<RouteGallery />} />
+              )}
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

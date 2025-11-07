@@ -19,6 +19,7 @@
     "test": "vitest",
     "format.fix": "prettier --write .",
     "typecheck": "tsc",
+    "export:routes": "tsx scripts/export-routes.ts",
     "docs:refresh": "./scripts/project_overview.sh && ./scripts/routes_report.sh && ./scripts/readme_overview.sh && git add PROJECT_OVERVIEW.md ROUTES.md README.md && git add scripts/*.sh && git commit -m \"docs: refresh overview/routes/readme\"",
     "prepare": "husky install",
     "audit:routes": "node scripts/crawl.js",
