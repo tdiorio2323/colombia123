@@ -1,24 +1,28 @@
-import { useTheme } from "next-themes";
 import { Toaster as Sonner } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme();
-
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
+      theme="dark"
       className="toaster group"
+      position="top-right"
       toastOptions={{
         classNames: {
           toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
-          description: "group-[.toast]:text-muted-foreground",
+            "group toast bg-luxury-black/95 backdrop-blur-2xl border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.5)] text-white rounded-2xl",
+          description: "text-white/60",
           actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
+            "bg-luxury-gold text-luxury-black hover:bg-luxury-gold-light font-semibold rounded-xl",
           cancelButton:
-            "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+            "bg-white/10 text-white/80 hover:bg-white/20 rounded-xl",
+          success:
+            "border-green-500/30 shadow-[0_8px_32px_rgba(34,197,94,0.2)]",
+          error: "border-red-500/30 shadow-[0_8px_32px_rgba(239,68,68,0.2)]",
+          warning:
+            "border-yellow-500/30 shadow-[0_8px_32px_rgba(234,179,8,0.2)]",
+          info: "border-luxury-gold/30 shadow-[0_8px_32px_rgba(212,175,55,0.2)]",
         },
       }}
       {...props}

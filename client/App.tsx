@@ -22,39 +22,101 @@ import ProfilePage from "./pages/Profile";
 import CreatorPage from "./components/CreatorPage";
 import ShowcasePage from "./pages/Showcase";
 
+import { AuthProvider } from "./contexts/AuthContext";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import {
+  ProtectedRoute,
+  GuestOnlyRoute,
+  CreatorOnlyRoute,
+} from "./components/ProtectedRoute";
+
 import { creators } from "./data/creators.tsx";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/upload" element={<Upload />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/calendar" element={<Calendar />} />
-          <Route path="/smart-reply" element={<SmartReply />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/showcase" element={<ShowcasePage />} />
-          <Route
-            path="/c/:username"
-            element={<CreatorPage creator={creators[0]} />}
-          />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={<Index />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/community" element={<Community />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/showcase" element={<ShowcasePage />} />
+              <Route
+                path="/c/:username"
+                element={<CreatorPage creator={creators[0]} />}
+              />
+
+              {/* Guest-only routes (redirect to /profile if logged in) */}
+              <Route
+                path="/login"
+                element={
+                  <GuestOnlyRoute>
+                    <Login />
+                  </GuestOnlyRoute>
+                }
+              />
+              <Route
+                path="/signup"
+                element={
+                  <GuestOnlyRoute>
+                    <Signup />
+                  </GuestOnlyRoute>
+                }
+              />
+
+              {/* Protected routes (require authentication) */}
+              <Route
+                path="/messages"
+                element={
+                  <ProtectedRoute>
+                    <Messages />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/smart-reply"
+                element={
+                  <ProtectedRoute>
+                    <SmartReply />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Creator-only routes */}
+              <Route
+                path="/upload"
+                element={
+                  <CreatorOnlyRoute>
+                    <Upload />
+                  </CreatorOnlyRoute>
+                }
+              />
+
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 createRoot(document.getElementById("root")!).render(<App />);

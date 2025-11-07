@@ -1,6 +1,17 @@
 import { useState } from "react";
 import { GlassCard, LuxuryButton } from "@/components/ui/luxury";
-import { ShoppingCart, Star, Heart, Sparkles, Video, Image as ImageIcon, Music, Lock, Download } from "lucide-react";
+import {
+  ShoppingCart,
+  Star,
+  Heart,
+  Sparkles,
+  Video,
+  Image as ImageIcon,
+  Music,
+  Lock,
+  Download,
+} from "lucide-react";
+import { toast } from "sonner";
 
 type ContentProduct = {
   id: number;
@@ -20,7 +31,9 @@ type ContentProduct = {
 
 export default function Shop() {
   const [cart, setCart] = useState<ContentProduct[]>([]);
-  const [filter, setFilter] = useState<"all" | "video" | "photos" | "audio" | "bundle">("all");
+  const [filter, setFilter] = useState<
+    "all" | "video" | "photos" | "audio" | "bundle"
+  >("all");
 
   const products: ContentProduct[] = [
     {
@@ -35,7 +48,7 @@ export default function Shop() {
       description: "30-minute exclusive behind the scenes footage",
       rating: 5,
       duration: "30 min",
-      isPremium: true
+      isPremium: true,
     },
     {
       id: 2,
@@ -47,7 +60,7 @@ export default function Shop() {
       creator: "Emma Rodriguez",
       description: "50 high-resolution exclusive photos",
       rating: 4.9,
-      itemCount: 50
+      itemCount: 50,
     },
     {
       id: 3,
@@ -59,13 +72,13 @@ export default function Shop() {
       creator: "Marcus Johnson",
       description: "Exclusive 45-minute podcast conversation",
       rating: 4.8,
-      duration: "45 min"
+      duration: "45 min",
     },
     {
       id: 4,
       name: "Ultimate Content Bundle",
       price: 79.99,
-      originalPrice: 120.00,
+      originalPrice: 120.0,
       thumbnail: "https://images.unsplash.com/photo-1611162616475-46b635cb6868",
       category: "bundle",
       contentType: "Bundle",
@@ -73,7 +86,7 @@ export default function Shop() {
       description: "Complete collection: 5 videos + 100 photos + bonus audio",
       rating: 5,
       itemCount: 106,
-      isPremium: true
+      isPremium: true,
     },
     {
       id: 5,
@@ -86,7 +99,7 @@ export default function Shop() {
       description: "Complete 6-part workout series with meal plan PDF",
       rating: 4.9,
       duration: "2 hours",
-      itemCount: 6
+      itemCount: 6,
     },
     {
       id: 6,
@@ -99,7 +112,7 @@ export default function Shop() {
       description: "Exclusive 80-photo intimate portrait collection",
       rating: 5,
       itemCount: 80,
-      isPremium: true
+      isPremium: true,
     },
     {
       id: 7,
@@ -111,7 +124,7 @@ export default function Shop() {
       creator: "DJ Phoenix",
       description: "Professional music production masterclass",
       rating: 4.8,
-      duration: "90 min"
+      duration: "90 min",
     },
     {
       id: 8,
@@ -124,25 +137,41 @@ export default function Shop() {
       description: "10 guided meditation sessions for relaxation",
       rating: 4.9,
       itemCount: 10,
-      duration: "3 hours"
+      duration: "3 hours",
     },
   ];
 
-  const filteredProducts = filter === "all"
-    ? products
-    : products.filter(p => p.category === filter);
+  const filteredProducts =
+    filter === "all" ? products : products.filter((p) => p.category === filter);
 
   const addToCart = (product: ContentProduct) => {
     setCart([...cart, product]);
+    toast.success("Added to cart", {
+      description: `${product.name} has been added to your cart.`,
+    });
+  };
+
+  const handleCheckout = () => {
+    if (cart.length === 0) return;
+
+    toast.success("Checkout initiated", {
+      description: "Redirecting to secure payment...",
+    });
+    // TODO: Implement actual checkout flow
   };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case "video": return <Video className="w-5 h-5" />;
-      case "photos": return <ImageIcon className="w-5 h-5" />;
-      case "audio": return <Music className="w-5 h-5" />;
-      case "bundle": return <Sparkles className="w-5 h-5" />;
-      default: return <ShoppingCart className="w-5 h-5" />;
+      case "video":
+        return <Video className="w-5 h-5" />;
+      case "photos":
+        return <ImageIcon className="w-5 h-5" />;
+      case "audio":
+        return <Music className="w-5 h-5" />;
+      case "bundle":
+        return <Sparkles className="w-5 h-5" />;
+      default:
+        return <ShoppingCart className="w-5 h-5" />;
     }
   };
 
@@ -180,11 +209,31 @@ export default function Shop() {
           {/* Filter Tabs */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             {[
-              { key: "all", label: "All Content", icon: <Sparkles className="w-4 h-4" /> },
-              { key: "video", label: "Videos", icon: <Video className="w-4 h-4" /> },
-              { key: "photos", label: "Photos", icon: <ImageIcon className="w-4 h-4" /> },
-              { key: "audio", label: "Audio", icon: <Music className="w-4 h-4" /> },
-              { key: "bundle", label: "Bundles", icon: <ShoppingCart className="w-4 h-4" /> },
+              {
+                key: "all",
+                label: "All Content",
+                icon: <Sparkles className="w-4 h-4" />,
+              },
+              {
+                key: "video",
+                label: "Videos",
+                icon: <Video className="w-4 h-4" />,
+              },
+              {
+                key: "photos",
+                label: "Photos",
+                icon: <ImageIcon className="w-4 h-4" />,
+              },
+              {
+                key: "audio",
+                label: "Audio",
+                icon: <Music className="w-4 h-4" />,
+              },
+              {
+                key: "bundle",
+                label: "Bundles",
+                icon: <ShoppingCart className="w-4 h-4" />,
+              },
             ].map((tab) => (
               <button
                 key={tab.key}
@@ -196,14 +245,20 @@ export default function Shop() {
                 }`}
               >
                 {tab.icon}
-                <span className="text-sm font-semibold uppercase tracking-wider">{tab.label}</span>
+                <span className="text-sm font-semibold uppercase tracking-wider">
+                  {tab.label}
+                </span>
               </button>
             ))}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {filteredProducts.map((product, index) => (
-              <GlassCard key={product.id} className="luxury-hover-lift group" style={{ animationDelay: `${index * 100}ms` }}>
+              <GlassCard
+                key={product.id}
+                className="luxury-hover-lift group"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <div className="relative mb-6 rounded-2xl overflow-hidden">
                   <img
                     src={product.thumbnail}
@@ -213,7 +268,9 @@ export default function Shop() {
                   {/* Content Type Badge */}
                   <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-luxury-black/70 backdrop-blur-xl border border-white/20 flex items-center gap-2">
                     {getCategoryIcon(product.category)}
-                    <span className="text-xs font-bold text-white uppercase">{product.contentType}</span>
+                    <span className="text-xs font-bold text-white uppercase">
+                      {product.contentType}
+                    </span>
                   </div>
 
                   {/* Premium Badge */}
@@ -229,7 +286,9 @@ export default function Shop() {
                   {/* Sale Badge */}
                   {product.originalPrice && (
                     <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-red-500 border border-red-400">
-                      <span className="text-xs font-bold text-white uppercase">Sale</span>
+                      <span className="text-xs font-bold text-white uppercase">
+                        Sale
+                      </span>
                     </div>
                   )}
 
@@ -241,14 +300,25 @@ export default function Shop() {
                 <div className="mb-4">
                   <div className="flex items-center gap-1 mb-2">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className={`w-4 h-4 ${i < Math.floor(product.rating) ? "text-luxury-gold fill-luxury-gold" : "text-white/20"}`} />
+                      <Star
+                        key={i}
+                        className={`w-4 h-4 ${i < Math.floor(product.rating) ? "text-luxury-gold fill-luxury-gold" : "text-white/20"}`}
+                      />
                     ))}
-                    <span className="text-xs text-white/50 ml-2">{product.rating}</span>
+                    <span className="text-xs text-white/50 ml-2">
+                      {product.rating}
+                    </span>
                   </div>
 
-                  <h3 className="text-lg font-light text-white mb-2 tracking-tight">{product.name}</h3>
-                  <p className="text-xs text-luxury-gold/80 mb-2 uppercase tracking-wider">By {product.creator}</p>
-                  <p className="text-sm text-white/60 font-light mb-3">{product.description}</p>
+                  <h3 className="text-lg font-light text-white mb-2 tracking-tight">
+                    {product.name}
+                  </h3>
+                  <p className="text-xs text-luxury-gold/80 mb-2 uppercase tracking-wider">
+                    By {product.creator}
+                  </p>
+                  <p className="text-sm text-white/60 font-light mb-3">
+                    {product.description}
+                  </p>
 
                   {/* Meta Info */}
                   <div className="flex items-center gap-3 text-xs text-white/50 mb-4">
@@ -267,9 +337,13 @@ export default function Shop() {
                   </div>
 
                   <div className="flex items-baseline gap-2 mb-4">
-                    <span className="text-2xl font-extralight text-luxury-gold">${product.price}</span>
+                    <span className="text-2xl font-extralight text-luxury-gold">
+                      ${product.price}
+                    </span>
                     {product.originalPrice && (
-                      <span className="text-sm text-white/40 line-through">${product.originalPrice}</span>
+                      <span className="text-sm text-white/40 line-through">
+                        ${product.originalPrice}
+                      </span>
                     )}
                   </div>
                 </div>
@@ -288,22 +362,36 @@ export default function Shop() {
           </div>
 
           {cart.length > 0 && (
-            <GlassCard premium className="mt-12 p-8 max-w-md ml-auto animate-luxury-fade-in">
+            <GlassCard
+              premium
+              className="mt-12 p-8 max-w-md ml-auto animate-luxury-fade-in"
+            >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-light text-white tracking-tight">Shopping Cart</h3>
+                <h3 className="text-xl font-light text-white tracking-tight">
+                  Shopping Cart
+                </h3>
                 <div className="w-8 h-8 rounded-full bg-luxury-gold flex items-center justify-center">
-                  <span className="text-sm font-bold text-luxury-black">{cart.length}</span>
+                  <span className="text-sm font-bold text-luxury-black">
+                    {cart.length}
+                  </span>
                 </div>
               </div>
 
               <div className="space-y-3 mb-6 max-h-48 overflow-y-auto">
                 {cart.map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-sm p-3 rounded-xl bg-white/5 border border-white/10">
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between text-sm p-3 rounded-xl bg-white/5 border border-white/10"
+                  >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       {getCategoryIcon(item.category)}
-                      <span className="text-white/80 truncate">{item.name}</span>
+                      <span className="text-white/80 truncate">
+                        {item.name}
+                      </span>
                     </div>
-                    <span className="text-luxury-gold font-light ml-3">${item.price}</span>
+                    <span className="text-luxury-gold font-light ml-3">
+                      ${item.price}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -311,7 +399,9 @@ export default function Shop() {
               <div className="border-t border-white/10 pt-4 mb-6">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-white/60 text-sm">Subtotal</span>
-                  <span className="text-white">${cart.reduce((sum, p) => sum + p.price, 0).toFixed(2)}</span>
+                  <span className="text-white">
+                    ${cart.reduce((sum, p) => sum + p.price, 0).toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-white font-light text-lg">Total</span>
@@ -321,7 +411,12 @@ export default function Shop() {
                 </div>
               </div>
 
-              <LuxuryButton variant="gold" size="lg" className="w-full">
+              <LuxuryButton
+                variant="gold"
+                size="lg"
+                className="w-full"
+                onClick={handleCheckout}
+              >
                 <Lock className="w-5 h-5 mr-2" />
                 Secure Checkout
               </LuxuryButton>

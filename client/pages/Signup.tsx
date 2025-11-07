@@ -3,13 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { LuxuryButton, LuxuryInput, GlassCard } from "@/components/ui/luxury";
 import { useAuth } from "@/contexts/AuthContext";
 import { UserRole } from "@shared/api";
+import { toast } from "sonner";
 import {
   Crown,
   Mail,
   Lock,
   Eye,
   EyeOff,
-  AlertCircle,
   User,
   Camera,
   Heart,
@@ -32,16 +32,25 @@ export default function SignupPage() {
     displayName: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
     setStep("details");
+    toast.success(
+      role === UserRole.CREATOR
+        ? "Creator account selected"
+        : "Fan account selected",
+      {
+        description:
+          role === UserRole.CREATOR
+            ? "Complete your details to start sharing content"
+            : "Complete your details to start supporting creators",
+      },
+    );
   };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    if (error) setError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,17 +62,21 @@ export default function SignupPage() {
       !formData.username ||
       !selectedRole
     ) {
-      setError("Please fill in all required fields");
+      toast.error("Missing required fields", {
+        description:
+          "Please fill in all required fields to create your account.",
+      });
       return;
     }
 
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
+      toast.error("Password too short", {
+        description: "Password must be at least 6 characters long.",
+      });
       return;
     }
 
     setIsLoading(true);
-    setError(null);
 
     try {
       const { data, error } = await signUp(
@@ -74,12 +87,20 @@ export default function SignupPage() {
       );
 
       if (error) {
-        setError(error.message);
+        toast.error("Sign up failed", {
+          description: error.message,
+        });
       } else if (data.user) {
-        navigate("/profile");
+        toast.success("Account created successfully!", {
+          description: `Welcome to Havana, ${formData.displayName || formData.username}!`,
+        });
+        setTimeout(() => navigate("/profile"), 500);
       }
     } catch (err) {
-      setError("An unexpected error occurred");
+      toast.error("An unexpected error occurred", {
+        description:
+          "Please try again or contact support if the problem persists.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -104,7 +125,7 @@ export default function SignupPage() {
             "w-full p-6 rounded-3xl transition-all duration-300 group text-left",
             "bg-gradient-to-br from-luxury-gold/15 via-luxury-gold/5 to-transparent",
             "border border-luxury-gold/30 hover:border-luxury-gold/60",
-            "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(212,175,55,0.2)]"
+            "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(212,175,55,0.2)]",
           )}
         >
           <div className="flex items-start">
@@ -137,7 +158,7 @@ export default function SignupPage() {
             "w-full p-6 rounded-3xl transition-all duration-300 group text-left",
             "bg-gradient-to-br from-white/5 via-white/[0.02] to-transparent",
             "border border-white/20 hover:border-white/40",
-            "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(255,255,255,0.1)]"
+            "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(255,255,255,0.1)]",
           )}
         >
           <div className="flex items-start">
@@ -188,28 +209,27 @@ export default function SignupPage() {
           <ArrowLeft className="w-4 h-4" />
           Change Role
         </button>
-        <div className={cn(
-          "px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase flex items-center gap-2",
-          selectedRole === UserRole.CREATOR
-            ? "bg-luxury-gold/20 border border-luxury-gold/40 text-luxury-gold"
-            : "bg-white/10 border border-white/30 text-white/80"
-        )}>
+        <div
+          className={cn(
+            "px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase flex items-center gap-2",
+            selectedRole === UserRole.CREATOR
+              ? "bg-luxury-gold/20 border border-luxury-gold/40 text-luxury-gold"
+              : "bg-white/10 border border-white/30 text-white/80",
+          )}
+        >
           {selectedRole === UserRole.CREATOR ? (
-            <><Camera className="w-3 h-3" /> Creator</>
+            <>
+              <Camera className="w-3 h-3" /> Creator
+            </>
           ) : (
-            <><Heart className="w-3 h-3" /> Fan</>
+            <>
+              <Heart className="w-3 h-3" /> Fan
+            </>
           )}
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        {error && (
-          <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center backdrop-blur-sm">
-            <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
-            {error}
-          </div>
-        )}
-
         <div className="space-y-2">
           <label className="text-xs font-semibold text-luxury-gold uppercase tracking-wider flex items-center gap-2">
             <Mail className="w-3.5 h-3.5" />
@@ -330,7 +350,10 @@ export default function SignupPage() {
       <div className="absolute top-20 right-20 w-96 h-96 bg-luxury-gold/10 rounded-full blur-3xl"></div>
       <div className="absolute bottom-20 left-20 w-80 h-80 bg-luxury-gold/5 rounded-full blur-3xl"></div>
 
-      <GlassCard className="w-full max-w-md relative z-10 animate-luxury-fade-in" premium>
+      <GlassCard
+        className="w-full max-w-md relative z-10 animate-luxury-fade-in"
+        premium
+      >
         <div className="text-center pb-6">
           {/* Logo */}
           <div className="w-20 h-20 bg-gradient-to-br from-luxury-gold to-luxury-gold-light rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(212,175,55,0.3)]">

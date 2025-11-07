@@ -2,15 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LuxuryButton, LuxuryInput, GlassCard } from "@/components/ui/luxury";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-  Crown,
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  AlertCircle,
-  Sparkles,
-} from "lucide-react";
+import { toast } from "sonner";
+import { Crown, Mail, Lock, Eye, EyeOff, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
@@ -22,34 +15,41 @@ export default function LoginPage() {
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    if (error) setError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      setError("Please fill in all fields");
+      toast.error("Please fill in all fields", {
+        description: "Email and password are required to sign in.",
+      });
       return;
     }
 
     setIsLoading(true);
-    setError(null);
 
     try {
       const { data, error } = await signIn(formData.email, formData.password);
 
       if (error) {
-        setError(error.message);
+        toast.error("Sign in failed", {
+          description: error.message,
+        });
       } else if (data.user) {
-        navigate("/profile");
+        toast.success("Welcome back!", {
+          description: "You've successfully signed in to your account.",
+        });
+        setTimeout(() => navigate("/profile"), 500);
       }
     } catch (err) {
-      setError("An unexpected error occurred");
+      toast.error("An unexpected error occurred", {
+        description:
+          "Please try again or contact support if the problem persists.",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -66,7 +66,10 @@ export default function LoginPage() {
       <div className="absolute top-20 right-20 w-96 h-96 bg-luxury-gold/10 rounded-full blur-3xl"></div>
       <div className="absolute bottom-20 left-20 w-80 h-80 bg-luxury-gold/5 rounded-full blur-3xl"></div>
 
-      <GlassCard className="w-full max-w-md relative z-10 animate-luxury-fade-in" premium>
+      <GlassCard
+        className="w-full max-w-md relative z-10 animate-luxury-fade-in"
+        premium
+      >
         <div className="text-center pb-6">
           {/* Logo */}
           <div className="w-20 h-20 bg-gradient-to-br from-luxury-gold to-luxury-gold-light rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(212,175,55,0.3)]">
@@ -91,13 +94,6 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {error && (
-            <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center backdrop-blur-sm">
-              <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
-              {error}
-            </div>
-          )}
-
           <div className="space-y-2">
             <label className="text-xs font-semibold text-luxury-gold uppercase tracking-wider flex items-center gap-2">
               <Mail className="w-3.5 h-3.5" />

@@ -111,6 +111,10 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground;
     background: radial-gradient(
@@ -530,5 +534,69 @@
     border-top-color: #d4af37;
     border-radius: 50%;
     animation: luxury-spin 0.8s linear infinite;
+  }
+
+  /* Luxury Transitions */
+  .luxury-transition {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .luxury-transition-slow {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .luxury-transition-fast {
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Luxury Hover Scale */
+  .luxury-hover-scale {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .luxury-hover-scale:hover {
+    transform: scale(1.05);
+  }
+
+  /* Luxury Hover Glow */
+  .luxury-hover-glow {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .luxury-hover-glow:hover {
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+  }
+
+  /* Stagger Animation Delays */
+  .stagger-1 {
+    animation-delay: 0.1s;
+  }
+
+  .stagger-2 {
+    animation-delay: 0.2s;
+  }
+
+  .stagger-3 {
+    animation-delay: 0.3s;
+  }
+
+  .stagger-4 {
+    animation-delay: 0.4s;
+  }
+
+  .stagger-5 {
+    animation-delay: 0.5s;
+  }
+
+  /* Focus Visible Ring */
+  *:focus-visible {
+    outline: 2px solid rgba(212, 175, 55, 0.5);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Disable focus ring for mouse users */
+  *:focus:not(:focus-visible) {
+    outline: none;
   }
 }
