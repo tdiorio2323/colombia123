@@ -17,8 +17,6 @@ import Shop from "./pages/Shop";
 import Community from "./pages/Community";
 import Calendar from "./pages/Calendar";
 import NotFound from "./pages/NotFound";
-import SmartReply from "./pages/SmartReply";
-import Leaderboard from "./pages/Leaderboard";
 import ProfilePage from "./pages/Profile";
 import CreatorPage from "./components/CreatorPage";
 import ShowcasePage from "./pages/Showcase";
@@ -43,8 +41,6 @@ const App = () => (
           <Route path="/shop" element={<Shop />} />
           <Route path="/community" element={<Community />} />
           <Route path="/calendar" element={<Calendar />} />
-          <Route path="/smart-reply" element={<SmartReply />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/showcase" element={<ShowcasePage />} />
           <Route
