@@ -14,12 +14,37 @@ export default {
     },
     extend: {
       fontFamily: {
-        "display": ["Crimson Text", "serif"],
-        "body": ["Montserrat", "sans-serif"],
-        "script": ["Libre Baskerville", "serif"],
-        "serif": ["Crimson Text", "serif"],
+        sans: [
+          "Inter",
+          "SF Pro Display",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "sans-serif",
+        ],
+        display: ["Inter", "SF Pro Display", "sans-serif"],
+        "display-old": ["Crimson Text", "serif"],
+        body: ["Montserrat", "sans-serif"],
+        script: ["Libre Baskerville", "serif"],
+        serif: ["Crimson Text", "serif"],
+      },
+      letterSpacing: {
+        luxury: "0.15em",
+        tight: "-0.02em",
       },
       colors: {
+        // Luxury Palette
+        luxury: {
+          black: "#0A0A0A",
+          charcoal: "#1A1A1A",
+          slate: "#2D2D2D",
+          white: "#FAFAFA",
+          cream: "#F8F8F6",
+          gold: "#D4AF37",
+          "gold-light": "#F4E4C1",
+          platinum: "#E5E4E2",
+          bronze: "#CD7F32",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -83,11 +108,11 @@ export default {
           "linear-gradient(135deg, #FFD700 0%, #CE1126 50%, #003893 100%)",
         "glass-gradient":
           "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)",
-        "marina":
+        marina:
           "url(https://images.pexels.com/photos/42092/pexels-photo-42092.jpeg)",
-        "resort":
+        resort:
           "url(https://images.pexels.com/photos/8085365/pexels-photo-8085365.jpeg)",
-        "penthouse":
+        penthouse:
           "url(https://images.pexels.com/photos/8572163/pexels-photo-8572163.jpeg)",
       },
       boxShadow: {
@@ -133,7 +158,7 @@ export default {
             transform: "translateX(0)",
           },
         },
-        "glow": {
+        glow: {
           "0%, 100%": {
             boxShadow: "0 0 40px rgba(255, 215, 0, 0.3)",
           },
@@ -141,7 +166,7 @@ export default {
             boxShadow: "0 0 80px rgba(255, 215, 0, 0.6)",
           },
         },
-        "shimmer": {
+        shimmer: {
           "0%": {
             backgroundPosition: "0% 50%",
           },
@@ -152,7 +177,7 @@ export default {
             backgroundPosition: "0% 50%",
           },
         },
-        "float": {
+        float: {
           "0%, 100%": {
             transform: "translateY(0px)",
           },
@@ -160,7 +185,7 @@ export default {
             transform: "translateY(-10px)",
           },
         },
-        "pulse": {
+        pulse: {
           "0%, 100%": {
             opacity: "1",
             transform: "scale(1)",
@@ -170,16 +195,37 @@ export default {
             transform: "scale(1.05)",
           },
         },
+        "luxury-fade-in": {
+          from: {
+            opacity: "0",
+            transform: "translateY(20px)",
+          },
+          to: {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
+        "luxury-shimmer": {
+          "0%": {
+            backgroundPosition: "-1000px 0",
+          },
+          "100%": {
+            backgroundPosition: "1000px 0",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.8s ease-out",
         "slide-in": "slide-in 0.5s ease-out",
-        "glow": "glow 3s ease-in-out infinite",
-        "shimmer": "shimmer 4s ease infinite",
-        "float": "float 3s ease-in-out infinite",
-        "pulse": "pulse 2s ease-in-out infinite",
+        glow: "glow 3s ease-in-out infinite",
+        shimmer: "shimmer 4s ease infinite",
+        float: "float 3s ease-in-out infinite",
+        pulse: "pulse 2s ease-in-out infinite",
+        "luxury-fade-in":
+          "luxury-fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards",
+        "luxury-shimmer": "luxury-shimmer 2s infinite",
       },
     },
   },

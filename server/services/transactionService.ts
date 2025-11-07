@@ -1,5 +1,5 @@
 import { prisma, handlePrismaError } from "../lib/prisma";
-import { TransactionType, TransactionStatus } from "@prisma/client";
+import { TransactionType, TransactionStatus } from "@shared/api";
 
 export class TransactionService {
   // Create new transaction

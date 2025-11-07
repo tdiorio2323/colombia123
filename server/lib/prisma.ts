@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+// Temporary: Use stub from shared/api until Prisma client can be generated
+import { PrismaClient } from "@shared/api";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 

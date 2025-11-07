@@ -1,5 +1,5 @@
 import { prisma, handlePrismaError } from "../lib/prisma";
-import { SubscriptionStatus } from "@prisma/client";
+import { SubscriptionStatus } from "@shared/api";
 
 export class SubscriptionService {
   // Create new subscription

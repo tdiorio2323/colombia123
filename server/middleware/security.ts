@@ -108,14 +108,16 @@ export const securityHeaders = helmet({
       styleSrc: [
         "'self'",
         "https://fonts.googleapis.com",
-        ...(process.env.NODE_ENV === "development" ? ["'unsafe-inline'"] : [])
+        ...(process.env.NODE_ENV === "development" ? ["'unsafe-inline'"] : []),
       ],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:", "blob:"],
       scriptSrc: [
         "'self'",
         "https://js.stripe.com", // Stripe JS
-        ...(process.env.NODE_ENV === "development" ? ["'unsafe-inline'", "'unsafe-eval'"] : []),
+        ...(process.env.NODE_ENV === "development"
+          ? ["'unsafe-inline'", "'unsafe-eval'"]
+          : []),
       ],
       connectSrc: [
         "'self'",
@@ -142,12 +144,8 @@ export const securityHeaders = helmet({
   noSniff: true,
   xssFilter: true,
   referrerPolicy: { policy: "strict-origin-when-cross-origin" },
-  permissionsPolicy: {
-    camera: [],
-    microphone: [],
-    geolocation: [],
-    payment: ["'self'"], // Allow payment API for Stripe
-  },
+  // Note: permissionsPolicy is deprecated in helmet 8.x
+  // Use Permissions-Policy header directly if needed
 });
 
 // IP whitelist for admin functions (if needed)

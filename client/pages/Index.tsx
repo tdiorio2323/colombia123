@@ -6,11 +6,18 @@ import Footer from "../components/Footer";
 
 export default function Index() {
   return (
-    <main className="bg-primary text-secondary min-h-screen flex flex-col">
-      <Hero />
-      <Features />
-      <Showcase />
-      <Footer />
+    <main className="bg-luxury-black text-luxury-white min-h-screen flex flex-col relative overflow-hidden">
+      {/* Luxury Background Layers */}
+      <div className="absolute inset-0 bg-luxury-gradient"></div>
+      <div className="absolute inset-0 bg-luxury-noise"></div>
+
+      {/* Content */}
+      <div className="relative z-10">
+        <Hero />
+        <Features />
+        <Showcase />
+        <Footer />
+      </div>
     </main>
   );
 }

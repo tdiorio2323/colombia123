@@ -1,5 +1,5 @@
 import { prisma, handlePrismaError } from "../lib/prisma";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "@shared/api";
 
 export class UserService {
   // Find user by email
