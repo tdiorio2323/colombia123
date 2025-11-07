@@ -16,6 +16,7 @@ import Services from "./pages/Services";
 import Shop from "./pages/Shop";
 import Community from "./pages/Community";
 import Calendar from "./pages/Calendar";
+import SmartReply from "./pages/SmartReply";
 import NotFound from "./pages/NotFound";
 import ProfilePage from "./pages/Profile";
 import CreatorPage from "./components/CreatorPage";
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/shop" element={<Shop />} />
           <Route path="/community" element={<Community />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/smart-reply" element={<SmartReply />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/showcase" element={<ShowcasePage />} />
           <Route
