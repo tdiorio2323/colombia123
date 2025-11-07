@@ -8,6 +8,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Index from "./pages/Index";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Messages from "./pages/Messages";
+import Upload from "./pages/Upload";
 import Services from "./pages/Services";
 import Shop from "./pages/Shop";
 import Community from "./pages/Community";
@@ -31,6 +35,10 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/upload" element={<Upload />} />
           <Route path="/services" element={<Services />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/community" element={<Community />} />
@@ -39,7 +47,10 @@ const App = () => (
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/showcase" element={<ShowcasePage />} />
-          <Route path="/c/:username" element={<CreatorPage creator={creators[0]} />} />
+          <Route
+            path="/c/:username"
+            element={<CreatorPage creator={creators[0]} />}
+          />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
