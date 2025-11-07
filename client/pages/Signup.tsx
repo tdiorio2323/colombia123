@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { LuxuryButton, LuxuryInput, GlassCard } from "@/components/ui/luxury";
 import { useAuth } from "@/contexts/AuthContext";
 import { UserRole } from "@shared/api";
 import {
@@ -13,11 +10,12 @@ import {
   Eye,
   EyeOff,
   AlertCircle,
-  Loader2,
   User,
   Camera,
   Heart,
   CheckCircle,
+  Sparkles,
+  ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -88,80 +86,92 @@ export default function SignupPage() {
   };
 
   const renderRoleSelection = () => (
-    <div className="space-y-4 animate-in fade-in duration-500">
-      <div className="text-center mb-6">
-        <h2 className="text-xl font-luxury-display font-bold text-gold mb-2">
+    <div className="space-y-6 animate-luxury-fade-in">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-extralight text-white mb-2">
           Choose Your Path
         </h2>
-        <p className="text-white/70 text-sm">
-          Select how you want to join the platform
+        <p className="text-white/50 text-sm font-light">
+          Select how you want to join Havana
         </p>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
+        {/* Creator Role */}
         <button
-          onClick={() => handleRoleSelect("CREATOR")}
-          className="w-full p-6 rounded-xl bg-gradient-to-r from-gold/10 to-primary/10 border border-gold/20 hover:border-gold/40 transition-all duration-300 group text-left"
+          onClick={() => handleRoleSelect(UserRole.CREATOR)}
+          className={cn(
+            "w-full p-6 rounded-3xl transition-all duration-300 group text-left",
+            "bg-gradient-to-br from-luxury-gold/15 via-luxury-gold/5 to-transparent",
+            "border border-luxury-gold/30 hover:border-luxury-gold/60",
+            "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(212,175,55,0.2)]"
+          )}
         >
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-gold/20 to-primary/20 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
-              <Camera className="w-6 h-6 text-gold" />
+          <div className="flex items-start">
+            <div className="w-14 h-14 bg-luxury-gold/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mr-5 group-hover:scale-110 transition-transform flex-shrink-0">
+              <Camera className="w-7 h-7 text-luxury-gold" />
             </div>
-            <div>
-              <h3 className="font-luxury-display font-bold text-gold mb-1">
-                Creator
+            <div className="flex-1">
+              <h3 className="font-light text-xl text-luxury-gold mb-2">
+                Creator Account
               </h3>
-              <p className="text-white/80 text-sm">
-                Share content, build your fanbase, and earn money
+              <p className="text-white/70 text-sm mb-3 font-light leading-relaxed">
+                Share content, build your fanbase, and monetize your creativity
               </p>
-              <div className="flex gap-2 mt-2">
-                <Badge className="glass-card bg-gold/20 text-gold border-gold/30 text-xs">
+              <div className="flex flex-wrap gap-2">
+                <span className="px-3 py-1 rounded-full text-xs bg-luxury-gold/10 border border-luxury-gold/30 text-luxury-gold font-medium">
                   Monetize Content
-                </Badge>
-                <Badge className="glass-card bg-primary/20 text-primary border-primary/30 text-xs">
+                </span>
+                <span className="px-3 py-1 rounded-full text-xs bg-luxury-gold/10 border border-luxury-gold/30 text-luxury-gold font-medium">
                   Build Fanbase
-                </Badge>
+                </span>
               </div>
             </div>
           </div>
         </button>
 
+        {/* Fan Role */}
         <button
-          onClick={() => handleRoleSelect("FAN")}
-          className="w-full p-6 rounded-xl bg-gradient-to-r from-primary/10 to-blue/10 border border-primary/20 hover:border-primary/40 transition-all duration-300 group text-left"
+          onClick={() => handleRoleSelect(UserRole.FAN)}
+          className={cn(
+            "w-full p-6 rounded-3xl transition-all duration-300 group text-left",
+            "bg-gradient-to-br from-white/5 via-white/[0.02] to-transparent",
+            "border border-white/20 hover:border-white/40",
+            "hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(255,255,255,0.1)]"
+          )}
         >
-          <div className="flex items-center">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-blue/20 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
-              <Heart className="w-6 h-6 text-primary" />
+          <div className="flex items-start">
+            <div className="w-14 h-14 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mr-5 group-hover:scale-110 transition-transform flex-shrink-0">
+              <Heart className="w-7 h-7 text-white/80" />
             </div>
-            <div>
-              <h3 className="font-luxury-display font-bold text-primary mb-1">
-                Fan
+            <div className="flex-1">
+              <h3 className="font-light text-xl text-white mb-2">
+                Fan Account
               </h3>
-              <p className="text-white/80 text-sm">
+              <p className="text-white/70 text-sm mb-3 font-light leading-relaxed">
                 Support creators, access exclusive content, and connect
               </p>
-              <div className="flex gap-2 mt-2">
-                <Badge className="glass-card bg-primary/20 text-primary border-primary/30 text-xs">
+              <div className="flex flex-wrap gap-2">
+                <span className="px-3 py-1 rounded-full text-xs bg-white/10 border border-white/30 text-white/80 font-medium">
                   Exclusive Access
-                </Badge>
-                <Badge className="glass-card bg-blue/20 text-blue border-blue/30 text-xs">
+                </span>
+                <span className="px-3 py-1 rounded-full text-xs bg-white/10 border border-white/30 text-white/80 font-medium">
                   Support Creators
-                </Badge>
+                </span>
               </div>
             </div>
           </div>
         </button>
       </div>
 
-      <div className="text-center pt-4">
-        <p className="text-white/70 text-sm">
+      <div className="text-center pt-6 border-t border-white/10">
+        <p className="text-white/50 text-sm font-light">
           Already have an account?{" "}
           <Link
             to="/login"
-            className="text-gold hover:text-gold/80 font-medium transition-colors"
+            className="text-luxury-gold hover:text-luxury-gold-light font-medium transition-colors"
           >
-            Sign in here
+            Sign In
           </Link>
         </p>
       </div>
@@ -169,148 +179,139 @@ export default function SignupPage() {
   );
 
   const renderDetailsForm = () => (
-    <div className="space-y-4 animate-in fade-in duration-500">
-      <div className="text-center mb-4">
-        <div className="flex items-center justify-center mb-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-gold/20 to-primary/20 rounded-lg flex items-center justify-center mr-2">
-            {selectedRole === "CREATOR" ? (
-              <Camera className="w-4 h-4 text-gold" />
-            ) : (
-              <Heart className="w-4 h-4 text-primary" />
-            )}
-          </div>
-          <Badge
-            className={cn(
-              "glass-card border text-xs",
-              selectedRole === "CREATOR"
-                ? "bg-gold/20 text-gold border-gold/30"
-                : "bg-primary/20 text-primary border-primary/30",
-            )}
-          >
-            {selectedRole === "CREATOR" ? "Creator Account" : "Fan Account"}
-          </Badge>
-        </div>
+    <div className="space-y-5 animate-luxury-fade-in">
+      <div className="flex items-center justify-between mb-6">
         <button
           onClick={() => setStep("role")}
-          className="text-white/60 hover:text-white/80 text-sm transition-colors"
+          className="flex items-center gap-2 text-white/60 hover:text-luxury-gold transition-colors text-sm"
         >
-          Change role
+          <ArrowLeft className="w-4 h-4" />
+          Change Role
         </button>
+        <div className={cn(
+          "px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase flex items-center gap-2",
+          selectedRole === UserRole.CREATOR
+            ? "bg-luxury-gold/20 border border-luxury-gold/40 text-luxury-gold"
+            : "bg-white/10 border border-white/30 text-white/80"
+        )}>
+          {selectedRole === UserRole.CREATOR ? (
+            <><Camera className="w-3 h-3" /> Creator</>
+          ) : (
+            <><Heart className="w-3 h-3" /> Fan</>
+          )}
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center">
-            <AlertCircle className="w-4 h-4 mr-2" />
+          <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center backdrop-blur-sm">
+            <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
             {error}
           </div>
         )}
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gold flex items-center">
-            <Mail className="w-4 h-4 mr-2" />
-            Email *
+          <label className="text-xs font-semibold text-luxury-gold uppercase tracking-wider flex items-center gap-2">
+            <Mail className="w-3.5 h-3.5" />
+            Email Address *
           </label>
-          <Input
+          <LuxuryInput
             type="email"
-            placeholder="Enter your email"
+            placeholder="your@email.com"
             value={formData.email}
             onChange={(e) => handleInputChange("email", e.target.value)}
-            className="auth-input-luxury text-white placeholder:text-white/50 font-luxury-body focus:ring-2 focus:ring-gold/30 focus:ring-offset-0"
             disabled={isLoading}
             required
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gold flex items-center">
-            <User className="w-4 h-4 mr-2" />
+          <label className="text-xs font-semibold text-luxury-gold uppercase tracking-wider flex items-center gap-2">
+            <User className="w-3.5 h-3.5" />
             Username *
           </label>
-          <Input
+          <LuxuryInput
             type="text"
             placeholder="Choose a unique username"
             value={formData.username}
             onChange={(e) => handleInputChange("username", e.target.value)}
-            className="auth-input-luxury text-white placeholder:text-white/50 font-luxury-body focus:ring-2 focus:ring-gold/30 focus:ring-offset-0"
             disabled={isLoading}
             required
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gold flex items-center">
-            <User className="w-4 h-4 mr-2" />
+          <label className="text-xs font-semibold text-luxury-gold uppercase tracking-wider flex items-center gap-2">
+            <User className="w-3.5 h-3.5" />
             Display Name
           </label>
-          <Input
+          <LuxuryInput
             type="text"
             placeholder="Your public display name"
             value={formData.displayName}
             onChange={(e) => handleInputChange("displayName", e.target.value)}
-            className="auth-input-luxury text-white placeholder:text-white/50 font-luxury-body focus:ring-2 focus:ring-gold/30 focus:ring-offset-0"
             disabled={isLoading}
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gold flex items-center">
-            <Lock className="w-4 h-4 mr-2" />
+          <label className="text-xs font-semibold text-luxury-gold uppercase tracking-wider flex items-center gap-2">
+            <Lock className="w-3.5 h-3.5" />
             Password *
           </label>
           <div className="relative">
-            <Input
+            <LuxuryInput
               type={showPassword ? "text" : "password"}
-              placeholder="Create a secure password"
+              placeholder="Create a secure password (6+ chars)"
               value={formData.password}
               onChange={(e) => handleInputChange("password", e.target.value)}
-              className="auth-input-luxury text-white placeholder:text-white/50 pr-10 font-luxury-body focus:ring-2 focus:ring-gold/30 focus:ring-offset-0"
               disabled={isLoading}
+              className="pr-12"
               required
               minLength={6}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gold/60 hover:text-gold transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-luxury-gold transition-colors"
               disabled={isLoading}
             >
               {showPassword ? (
-                <EyeOff className="w-4 h-4" />
+                <EyeOff className="w-5 h-5" />
               ) : (
-                <Eye className="w-4 h-4" />
+                <Eye className="w-5 h-5" />
               )}
             </button>
           </div>
-          <p className="text-white/50 text-xs">Must be at least 6 characters</p>
         </div>
 
-        <Button
+        <LuxuryButton
           type="submit"
+          variant="gold"
+          className="w-full py-6 text-base mt-6"
           disabled={isLoading}
-          className="w-full btn-luxury py-3 text-base relative overflow-hidden group"
         >
           {isLoading ? (
-            <>
-              <Loader2 className="animate-spin h-4 w-4 mr-2" />
-              Creating account...
-            </>
+            <span className="flex items-center gap-2">
+              <div className="w-5 h-5 border-2 border-luxury-black/30 border-t-luxury-black rounded-full animate-spin"></div>
+              Creating Account...
+            </span>
           ) : (
-            <>
+            <span className="flex items-center gap-2">
               Create Account
-              <CheckCircle className="ml-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
-            </>
+              <CheckCircle className="w-4 h-4" />
+            </span>
           )}
-        </Button>
+        </LuxuryButton>
 
-        <div className="text-center pt-4">
-          <p className="text-white/70 text-sm">
+        <div className="text-center pt-6 border-t border-white/10">
+          <p className="text-white/50 text-sm font-light">
             Already have an account?{" "}
             <Link
               to="/login"
-              className="text-gold hover:text-gold/80 font-medium transition-colors"
+              className="text-luxury-gold hover:text-luxury-gold-light font-medium transition-colors"
             >
-              Sign in here
+              Sign In
             </Link>
           </p>
         </div>
@@ -319,35 +320,42 @@ export default function SignupPage() {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background/95 to-primary/5">
-      <Card className="w-full max-w-md auth-card-luxury border-0 overflow-hidden">
-        <CardHeader className="text-center pb-4 relative">
-          {/* Decorative background elements */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-4 left-4 w-20 h-20 bg-gradient-to-br from-gold/30 to-transparent rounded-full blur-xl" />
-            <div className="absolute bottom-4 right-4 w-16 h-16 bg-gradient-to-br from-primary/30 to-transparent rounded-full blur-lg" />
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Luxury Background */}
+      <div className="absolute inset-0 bg-luxury-black"></div>
+      <div className="absolute inset-0 bg-luxury-gradient"></div>
+      <div className="absolute inset-0 bg-luxury-noise"></div>
+
+      {/* Decorative Elements */}
+      <div className="absolute top-20 right-20 w-96 h-96 bg-luxury-gold/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-20 left-20 w-80 h-80 bg-luxury-gold/5 rounded-full blur-3xl"></div>
+
+      <GlassCard className="w-full max-w-md relative z-10 animate-luxury-fade-in" premium>
+        <div className="text-center pb-6">
+          {/* Logo */}
+          <div className="w-20 h-20 bg-gradient-to-br from-luxury-gold to-luxury-gold-light rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(212,175,55,0.3)]">
+            <Crown className="h-10 w-10 text-luxury-black" />
           </div>
 
-          {/* Header content */}
-          <div className="relative z-10">
-            <div className="w-16 h-16 bg-gradient-to-br from-gold via-primary to-blue rounded-2xl flex items-center justify-center mx-auto mb-4 animate-luxury-pulse">
-              <Crown className="h-8 w-8 text-white" />
-            </div>
+          {/* Title */}
+          <h1 className="text-4xl font-extralight text-white mb-2 tracking-tight">
+            Join Havana
+          </h1>
+          <p className="text-white/60 text-sm font-light mb-4">
+            Create your account and start your journey
+          </p>
 
-            <h1 className="text-3xl font-luxury-display font-bold mb-2">
-              <span className="text-gradient-luxury">Join Colombia</span>
-            </h1>
-
-            <p className="text-white/80 text-sm font-luxury-script">
-              Create your account and start your journey
-            </p>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-luxury-gold/10 border border-luxury-gold/30 rounded-full px-4 py-1.5 backdrop-blur-sm">
+            <Sparkles className="w-3 h-3 text-luxury-gold" />
+            <span className="text-luxury-gold text-xs font-semibold tracking-wider uppercase">
+              Premium Platform
+            </span>
           </div>
-        </CardHeader>
+        </div>
 
-        <CardContent className="px-6 pb-6 pt-2">
-          {step === "role" ? renderRoleSelection() : renderDetailsForm()}
-        </CardContent>
-      </Card>
+        {step === "role" ? renderRoleSelection() : renderDetailsForm()}
+      </GlassCard>
     </div>
   );
 }

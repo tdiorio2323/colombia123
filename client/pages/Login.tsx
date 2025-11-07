@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { LuxuryButton, LuxuryInput, GlassCard } from "@/components/ui/luxury";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   Crown,
@@ -12,7 +9,7 @@ import {
   Eye,
   EyeOff,
   AlertCircle,
-  Loader2,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -59,130 +56,125 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background/95 to-primary/5">
-      <Card className="w-full max-w-md auth-card-luxury border-0 overflow-hidden">
-        <CardHeader className="text-center pb-4 relative">
-          {/* Decorative background elements */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-4 left-4 w-20 h-20 bg-gradient-to-br from-gold/30 to-transparent rounded-full blur-xl" />
-            <div className="absolute bottom-4 right-4 w-16 h-16 bg-gradient-to-br from-primary/30 to-transparent rounded-full blur-lg" />
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Luxury Background */}
+      <div className="absolute inset-0 bg-luxury-black"></div>
+      <div className="absolute inset-0 bg-luxury-gradient"></div>
+      <div className="absolute inset-0 bg-luxury-noise"></div>
+
+      {/* Decorative Elements */}
+      <div className="absolute top-20 right-20 w-96 h-96 bg-luxury-gold/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-20 left-20 w-80 h-80 bg-luxury-gold/5 rounded-full blur-3xl"></div>
+
+      <GlassCard className="w-full max-w-md relative z-10 animate-luxury-fade-in" premium>
+        <div className="text-center pb-6">
+          {/* Logo */}
+          <div className="w-20 h-20 bg-gradient-to-br from-luxury-gold to-luxury-gold-light rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(212,175,55,0.3)]">
+            <Crown className="h-10 w-10 text-luxury-black" />
           </div>
 
-          {/* Header content */}
-          <div className="relative z-10">
-            <div className="w-16 h-16 bg-gradient-to-br from-gold via-primary to-blue rounded-2xl flex items-center justify-center mx-auto mb-4 animate-luxury-pulse">
-              <Crown className="h-8 w-8 text-white" />
+          {/* Title */}
+          <h1 className="text-4xl font-extralight text-white mb-2 tracking-tight">
+            Welcome Back
+          </h1>
+          <p className="text-white/60 text-sm font-light mb-4">
+            Sign in to your Havana creator account
+          </p>
+
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-luxury-gold/10 border border-luxury-gold/30 rounded-full px-4 py-1.5 backdrop-blur-sm">
+            <Sparkles className="w-3 h-3 text-luxury-gold" />
+            <span className="text-luxury-gold text-xs font-semibold tracking-wider uppercase">
+              Premium Platform
+            </span>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {error && (
+            <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center backdrop-blur-sm">
+              <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
+              {error}
             </div>
+          )}
 
-            <h1 className="text-3xl font-luxury-display font-bold mb-2">
-              <span className="text-gradient-luxury">Welcome Back</span>
-            </h1>
-
-            <p className="text-white/80 text-sm font-luxury-script">
-              Sign in to your Colombian creator account
-            </p>
-
-            <Badge className="glass-card bg-gold/20 text-gold border-gold/30 mt-3 px-3 py-1 text-xs">
-              Creator Platform
-            </Badge>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-luxury-gold uppercase tracking-wider flex items-center gap-2">
+              <Mail className="w-3.5 h-3.5" />
+              Email Address
+            </label>
+            <LuxuryInput
+              type="email"
+              placeholder="your@email.com"
+              value={formData.email}
+              onChange={(e) => handleInputChange("email", e.target.value)}
+              disabled={isLoading}
+              required
+            />
           </div>
-        </CardHeader>
 
-        <CardContent className="px-6 pb-6 pt-2">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center">
-                <AlertCircle className="w-4 h-4 mr-2" />
-                {error}
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gold flex items-center">
-                <Mail className="w-4 h-4 mr-2" />
-                Email
-              </label>
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
-                className={cn(
-                  "auth-input-luxury text-white placeholder:text-white/50 font-luxury-body",
-                  "focus:ring-2 focus:ring-gold/30 focus:ring-offset-0",
-                )}
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-luxury-gold uppercase tracking-wider flex items-center gap-2">
+              <Lock className="w-3.5 h-3.5" />
+              Password
+            </label>
+            <div className="relative">
+              <LuxuryInput
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={(e) => handleInputChange("password", e.target.value)}
                 disabled={isLoading}
+                className="pr-12"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-luxury-gold transition-colors"
+                disabled={isLoading}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </button>
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gold flex items-center">
-                <Lock className="w-4 h-4 mr-2" />
-                Password
-              </label>
-              <div className="relative">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={formData.password}
-                  onChange={(e) =>
-                    handleInputChange("password", e.target.value)
-                  }
-                  className={cn(
-                    "auth-input-luxury text-white placeholder:text-white/50 pr-10 font-luxury-body",
-                    "focus:ring-2 focus:ring-gold/30 focus:ring-offset-0",
-                  )}
-                  disabled={isLoading}
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gold/60 hover:text-gold transition-colors"
-                  disabled={isLoading}
-                >
-                  {showPassword ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
-                </button>
-              </div>
-            </div>
+          <LuxuryButton
+            type="submit"
+            variant="gold"
+            className="w-full py-6 text-base mt-6"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <span className="flex items-center gap-2">
+                <div className="w-5 h-5 border-2 border-luxury-black/30 border-t-luxury-black rounded-full animate-spin"></div>
+                Signing In...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                Sign In
+                <Crown className="w-4 h-4" />
+              </span>
+            )}
+          </LuxuryButton>
 
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full btn-luxury py-3 text-base relative overflow-hidden group"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                  Signing in...
-                </>
-              ) : (
-                <>
-                  Sign In
-                  <Crown className="ml-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
-                </>
-              )}
-            </Button>
-
-            <div className="text-center pt-4">
-              <p className="text-white/70 text-sm">
-                Don't have an account?{" "}
-                <Link
-                  to="/signup"
-                  className="text-gold hover:text-gold/80 font-medium transition-colors"
-                >
-                  Sign up here
-                </Link>
-              </p>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+          <div className="text-center pt-6 border-t border-white/10">
+            <p className="text-white/50 text-sm font-light">
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
+                className="text-luxury-gold hover:text-luxury-gold-light font-medium transition-colors"
+              >
+                Create Account
+              </Link>
+            </p>
+          </div>
+        </form>
+      </GlassCard>
     </div>
   );
 }
